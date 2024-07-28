@@ -16,6 +16,7 @@
         </q-input>
 
         <q-input
+          v-if="solution.length"
           v-model="solution"
           outlined
           autogrow

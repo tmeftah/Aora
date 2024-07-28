@@ -6,7 +6,7 @@ export const useMainStore = defineStore("main", {
   state: () => ({
     loading: false,
     question: "",
-    solution: "Hallo",
+    solution: "",
   }),
   getters: {},
 
