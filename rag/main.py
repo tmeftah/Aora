@@ -13,6 +13,7 @@ import jwt
 from bcrypt import hashpw, gensalt, checkpw
 from .rag_llms_langchain import chain, langfuse_handler
 import json
+import uuid
 
 
 origins = [    
@@ -200,7 +201,6 @@ async def query(query: str):
     # Use the LangChain model to generate text
         print(20*'*', query)
         async for text in chain.astream({"input": query},config={"callbacks": [langfuse_handler]}):
-            yield f"{text}"
+            yield json.dumps({"event_id": str(uuid.uuid4()), "data": text })
 
-
-    return StreamingResponse(stream_generator(),media_type="text/plain")
+    return StreamingResponse(stream_generator(),media_type="application/x-ndjson")
