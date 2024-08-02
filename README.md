@@ -46,7 +46,7 @@ then run following command to run the dev server:
 
 ### Backend
 
-- [] Add a digest worker for emebding documents
-- [] Extend user permissions
-- [] Add new documents to db
-- [] Add meta data to a document
+- [ ] Add a digest worker for emebding documents
+- [ ] Extend user permissions
+- [ ] Add new documents to db
+- [ ] Add meta data to a document
