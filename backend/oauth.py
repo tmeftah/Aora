@@ -14,12 +14,14 @@ from typing import Optional
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-def encrypt_password(password: str):
+
+def encrypt_password(password: str) -> bytes:
     return hashpw(password.encode(), gensalt())
 
 
-def verify_password(plain_password: str, hashed_password: str):
+def verify_password(plain_password: str, hashed_password: str) -> bytes:
     return checkpw(plain_password.encode(), hashed_password)
+
 
 def get_user(username: str):
     return session.query(User).filter(User.username == username).first()
@@ -30,6 +32,7 @@ def authenticate_user(username: str, password: str):
     if not user or not verify_password(password, user.password_hash):
         return False
     return user
+
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
@@ -51,6 +54,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     if user is None:
         raise credentials_exception
     return user
+
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()

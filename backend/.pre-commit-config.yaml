@@ -1,0 +1,42 @@
+# .pre-commit-config.yaml
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.4.0  # Replace with the latest version if needed
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+
+  - repo: https://github.com/psf/black
+    rev: 23.1.0  # Replace with the latest version if needed
+    hooks:
+      - id: black
+        language_version: python3  # Adjust if you use a specific Python version
+
+  -   repo: https://github.com/PyCQA/flake8
+      rev: 7.0.0
+      hooks:
+      -   id: flake8
+
+
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.4.1  # Replace with the latest version if needed
+    hooks:
+      - id: mypy
+        args: [--ignore-missing-imports, --disallow-untyped-calls, --disallow-untyped-defs]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.4.0  # Replace with the latest version if needed
+    hooks:
+      - id: check-json
+      - id: check-xml
+
+  - repo: https://github.com/pre-commit/mirrors-pylint
+    rev: v3.0.0a5  # Replace with the latest version if needed
+    hooks:
+      - id: pylint
+        args: ["--max-line-length=88"]
