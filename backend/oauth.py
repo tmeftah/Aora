@@ -1,12 +1,15 @@
+import jwt
 
 from fastapi.security import OAuth2PasswordBearer
-from bcrypt import hashpw, gensalt, checkpw
 from fastapi import Depends, HTTPException
-import jwt
-from backend.config import SECRET_KEY, ALGORITHM
 
+from backend.config import SECRET_KEY, ALGORITHM
 from backend.sqlalchemy_models import session, User
 from backend.pydantic_models import TokenData
+
+from bcrypt import hashpw, gensalt, checkpw
+from datetime import datetime, timedelta
+from typing import Optional
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -47,3 +50,13 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     if user is None:
         raise credentials_exception
     return user
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
