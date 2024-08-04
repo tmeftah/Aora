@@ -66,6 +66,7 @@ jobs:
       - name: Verify frontend server is running
         run: |
           response=$(curl -s http://127.0.0.1:9000/2)
+          echo "$response"
           if echo "$response" | grep -q "DOC-INFO"; then
             echo "Frontend is running and contains 'DOC-INFO'"
           else
