@@ -31,7 +31,7 @@ jobs:
         run: |
           response=$(curl -s http://127.0.0.1:8000/health)
           echo "Response: $response"
-          if [ "$response" == '{"status":"active"}' ]; then
+          if [ "$response" == '{"status":"Active"}' ]; then
             echo "Health check passed"
           else
             echo "Health check failed"
