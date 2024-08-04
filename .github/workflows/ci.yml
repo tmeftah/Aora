@@ -24,7 +24,8 @@ jobs:
       - name: Start FastAPI app
         run: |
           cd backend
-          nohup fastapi dev > /dev/null 2>&1 & 
+          nohup fastapi dev > /dev/null 2>&1 &
+          echo $! > uvicorn.pid 
           sleep 10 
 
       - name: Check FastAPI /health endpoint
@@ -40,7 +41,15 @@ jobs:
 
       - name: Kill FastAPI process
         run: |
-          pkill -f "uvicorn main:app" 
+          echo "Killing FastAPI process..."
+          if [ -f uvicorn.pid ]; then
+            PID=$(cat uvicorn.pid)  
+            kill -9 $PID  
+            rm uvicorn.pid 
+          else
+            echo "PID file not found"
+            exit 1
+          fi
 
       - name: Check process termination
         run: |
