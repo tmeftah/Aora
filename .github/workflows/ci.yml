@@ -60,12 +60,12 @@ jobs:
       - name: Run frontend development server
         run: |
           cd frontend
-          npm run dev
+          nohup npm run dev > /dev/null 2>&1 &
           sleep 20
 
       - name: Verify frontend server is running
         run: |
-          response=$(curl -s http://localhost:9000/2)
+          response=$(curl -s http://127.0.0.1:9000/2)
           if echo "$response" | grep -q "DOC-INFO"; then
             echo "Frontend is running and contains 'DOC-INFO'"
           else
