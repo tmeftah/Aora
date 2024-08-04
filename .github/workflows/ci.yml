@@ -38,19 +38,3 @@ jobs:
             echo "Health check failed"
             exit 1
           fi
-
-      - name: Kill FastAPI process
-        run: |
-          echo "Killing FastAPI process..."
-          if [ -f uvicorn.pid ]; then
-            PID=$(cat uvicorn.pid)  
-            kill -9 $PID  
-            rm uvicorn.pid 
-          else
-            echo "PID file not found"
-            exit 1
-          fi
-
-      - name: Check process termination
-        run: |
-          pgrep -f "uvicorn main:app" || echo "Process terminated successfully" 
