@@ -60,9 +60,8 @@ jobs:
       - name: Run frontend development server
         run: |
           cd frontend
-          nohup npm run dev > /dev/null 2>&1 &
-          echo $! > npm.pid
-          sleep 10
+          npm run dev
+          sleep 20
 
       - name: Verify frontend server is running
         run: |
