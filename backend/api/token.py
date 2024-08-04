@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Depends, HTTPException
 from backend.pydantic_models import Token
 from backend.oauth import authenticate_user, create_access_token
