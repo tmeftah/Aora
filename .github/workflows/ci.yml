@@ -28,7 +28,7 @@ jobs:
 
       - name: Check FastAPI docs endpoint
         run: |
-          curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/docs | grep "200" 
+          curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000/docs | grep "200" 
 
       - name: Kill FastAPI process
         run: |
