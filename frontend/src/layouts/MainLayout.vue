@@ -1,6 +1,6 @@
 <template>
   <q-layout view="FHh Lpr lFf">
-    <q-header dark bordered class="bg-grey-1 text-grey-8">
+    <q-header dark bordered class="bg-darkblue-1 text-white-8">
       <q-toolbar>
         <q-btn
           flat
@@ -10,13 +10,7 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-        <q-img
-          src="https://suite.knowron.com/_next/image?url=https%3A%2F%2Fd2ccnoziqedwbs.cloudfront.net%2Flogos%2Flogo-kardex-group.png&w=256&q=75"
-          width="140px"
-        />
-
-
-        <q-toolbar-title>  RAGGI </q-toolbar-title>
+        <q-toolbar-title>  DOC-INFO </q-toolbar-title>
       </q-toolbar>
     </q-header>
 
@@ -24,17 +18,10 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      :mini="miniState"
-      @mouseover="miniState = false"
-      @mouseout="miniState = true"
       width="220"
     >
 
       <q-list>
-        <q-img
-          src="https://suite.knowron.com/_next/image?url=https%3A%2F%2Fd2ccnoziqedwbs.cloudfront.net%2Flogos%2Flogo-kardex-group.png&w=256&q=75"
-          width="140px"
-        />
 
         <EssentialLink
           v-for="link in linksList"
