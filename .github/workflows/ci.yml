@@ -23,7 +23,7 @@ jobs:
       - name: Start FastAPI app
         run: |
           cd backend
-          nohup fastapi dev > /dev/null 2>&1 & 
+          fastapi dev 
           sleep 10 
 
       - name: Check FastAPI /health endpoint
