@@ -1,0 +1,39 @@
+name: FastAPI CI
+
+on: [push, pull_request]  # Trigger the workflow on push or pull request
+
+jobs:
+  test:
+    runs-on: ubuntu-latest 
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3  
+
+      - name: Set up Python
+        uses: actions/setup-python@v4  
+        with:
+          python-version: '3.10'  
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+
+      - name: Start FastAPI app
+        run: |
+          cd backend
+          nohup uvicorn main:app --host 0.0.0.0 --port 8000 > /dev/null 2>&1 & 
+          sleep 10 
+
+      - name: Check FastAPI docs endpoint
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/docs | grep "200" 
+
+      - name: Kill FastAPI process
+        run: |
+          pkill -f "uvicorn main:app" 
+
+      - name: Check process termination
+        run: |
+          pgrep -f "uvicorn main:app" || echo "Process terminated successfully" 
