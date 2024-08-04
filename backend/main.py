@@ -1,16 +1,17 @@
 from fastapi import FastAPI, Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import sessionmaker
-from pydantic import BaseModel
+from fastapi.security import OAuth2PasswordRequestForm
+from backend.sqlalchemy_models import session, User
+from backend.oauth import oauth2_scheme, encrypt_password, get_user, authenticate_user
+from backend.config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
+from backend.pydantic_models import Token, TokenData
+from backend.api.user import user_router
+
 from typing import Optional
 from datetime import datetime, timedelta
 import jwt
-from bcrypt import hashpw, gensalt, checkpw
+
 from .rag_llms_langchain import chain, langfuse_handler
 from .embeddings.ingest import get_vectorstore
 import json
@@ -23,26 +24,6 @@ origins = [
 ]
 
 
-# SQLAlchemy setup
-
-engine = create_engine("sqlite:///users.db")
-Base = declarative_base()
-
-
-class User(Base):
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True)
-    username = Column(String, unique=True)
-    password_hash = Column(String)
-    # 1 = user, 4 = manager, 5 = admin, 6 = superadmin
-    role = Column(Integer, default=1)
-
-
-Base.metadata.create_all(engine)
-
-Session = sessionmaker(bind=engine)
-session = Session()
-
 # FastAPI setup
 app = FastAPI()
 
@@ -54,45 +35,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-# Password encryption
-
-
-def encrypt_password(password: str):
-    return hashpw(password.encode(), gensalt())
-
-
-def verify_password(plain_password: str, hashed_password: str):
-    return checkpw(plain_password.encode(), hashed_password)
-
-# User authentication
-
-
-def get_user(username: str):
-    return session.query(User).filter(User.username == username).first()
-
-
-def authenticate_user(username: str, password: str):
-    user = get_user(username)
-    if not user or not verify_password(password, user.password_hash):
-        return False
-    return user
-
-
-# JWT secret key
-SECRET_KEY = "your_secret_key"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-
-class TokenData(BaseModel):
-    username: Optional[str] = None
+app.include_router(user_router)
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
@@ -106,26 +49,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
-    credentials_exception = HTTPException(
-        status_code=401,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
-            raise credentials_exception
-        token_data = TokenData(username=username)
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token has expired")
-    except jwt.InvalidTokenError:
-        raise credentials_exception
-    user = get_user(username=token_data.username)
-    if user is None:
-        raise credentials_exception
-    return user
+
 
 # Populate admin user on first start
 
@@ -160,68 +84,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@app.get("/users/me")
-async def read_users_me(current_user: User = Depends(get_current_user)):
-    return {"username": current_user.username, "role": current_user.role}
 
-
-@app.get("/users/")
-async def read_users(current_user: User = Depends(get_current_user)):
-    if current_user.role < 5:
-        raise HTTPException(
-            status_code=403, detail="Only admin users can view all users")
-    return [{"username": user.username, "role": user.role} for user in session.query(User).all()]
-
-
-@app.get("/users/{user_id}")
-async def read_user(user_id: int, current_user: User = Depends(get_current_user)):
-    if current_user.id != user_id and current_user.role < 5:
-        raise HTTPException(
-            status_code=403, detail="Only admin users can view other users")
-    user = session.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return {"username": user.username, "role": user.role}
-
-
-@app.post("/users/")
-async def create_user(username: str, password: str, role: int, current_user: User = Depends(get_current_user)):
-    if current_user.role < 5:
-        raise HTTPException(
-            status_code=403, detail="Only admin users can create new users")
-    user = User(username=username,
-                password_hash=encrypt_password(password), role=role)
-    session.add(user)
-    session.commit()
-    return {"username": user.username, "role": user.role}
-
-
-@app.put("/users/{user_id}")
-async def update_user(user_id: int, username: str, password: str, role: int, current_user: User = Depends(get_current_user)):
-    if current_user.id != user_id and current_user.role < 5:
-        raise HTTPException(
-            status_code=403, detail="Only admin users can update other users")
-    user = session.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    user.username = username
-    user.password = password
-    user.role = role
-    session.commit()
-    return {"username": user.username, "role": user.role}
-
-
-@app.delete("/users/{user_id}")
-async def delete_user(user_id: int, current_user: User = Depends(get_current_user)):
-    if current_user.id != user_id and current_user.role < 5:
-        raise HTTPException(
-            status_code=403, detail="Only admin users can delete other users")
-    user = session.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    session.delete(user)
-    session.commit()
-    return {"message": "User deleted"}
 
 
 # Define a route for the app
