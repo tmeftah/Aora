@@ -1,5 +1,5 @@
-from question_and_answer import resp as QA
-from rag_docs import resp as RAG
+from backend.old_files.question_and_answer import resp as QA
+from backend.old_files.rag_docs import resp as RAG
 import gradio as gr
 
 

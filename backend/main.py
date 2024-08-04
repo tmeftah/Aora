@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 import jwt
 from bcrypt import hashpw, gensalt, checkpw
 from .rag_llms_langchain import chain, langfuse_handler
-from .ingest import get_vectorstore
+from .embeddings.ingest import get_vectorstore
 import json
 import uuid
 
