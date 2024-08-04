@@ -1,16 +1,6 @@
 from sqlalchemy import Column, Integer, String
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from backend.sessions import Base
 
-
-
-engine = create_engine("sqlite:///users.db")
-Base = declarative_base()
-Base.metadata.create_all(engine)
-
-Session = sessionmaker(bind=engine)
-session = Session()
 
 class User(Base):
     __tablename__ = "users"

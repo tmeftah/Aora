@@ -4,7 +4,8 @@ from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException
 
 from backend.config import SECRET_KEY, ALGORITHM
-from backend.sqlalchemy_models import session, User
+from backend.sqlalchemy_models import User
+from backend.sessions import session
 from backend.pydantic_models import TokenData
 
 from bcrypt import hashpw, gensalt, checkpw
