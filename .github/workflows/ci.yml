@@ -1,6 +1,6 @@
 name: FastAPI CI
 
-on: [push, pull_request]  # Trigger the workflow on push or pull request
+on: [push, pull_request] 
 
 jobs:
   test:
