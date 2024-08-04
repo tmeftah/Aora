@@ -67,10 +67,9 @@ jobs:
       - name: Verify frontend server is running
         run: |
           response=$(curl -s http://localhost:9000/2)
-          echo "Response: $response"
-          if [[ $response == *"expected content"* ]]; then
-            echo "Frontend is running"
+          if echo "$response" | grep -q "DOC-INFO"; then
+            echo "Frontend is running and contains 'DOC-INFO'"
           else
-            echo "Frontend is not running or did not return expected content"
+            echo "Frontend did not return expected content"
             exit 1
           fi
