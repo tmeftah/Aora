@@ -5,18 +5,22 @@
 # from langchain_core.runnables import RunnablePassthrough
 # from langchain_core.documents import Document
 
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-
-from langchain_chroma import Chroma
-from langchain_community.embeddings import OllamaEmbeddings
 import os
-import argparse
-
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.embeddings import OllamaEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_chroma import Chroma
 import chromadb
+from dotenv import load_dotenv
 
-parser = argparse.ArgumentParser(description="Averroes - Chatbot")
-parser.add_argument("indexing", type=int, help="indexing")
+load_dotenv()
+
+# Get the path value from .env file
+relative_path = os.getenv("DATABASE_PATH")
+# Get directory of script
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Append the relative path to the script directory
+persist_directory = os.path.join(script_dir, relative_path)
 
 
 def create_vectorstore():
@@ -37,23 +41,25 @@ def create_vectorstore():
             documents.extend(document_split)
 
     Chroma.from_documents(
-        collection_name="kardex",
+        collection_name=os.environ.get("COLLECTION_NAME"),
         documents=documents,
         embedding=OllamaEmbeddings(model="mxbai-embed-large"),
-        persist_directory="./vectorstore/chroma_db",
+        persist_directory=persist_directory,
     )
 
     print("vectorstore created...")
 
 
 def get_vectorstore():
-    persistent_client = chromadb.PersistentClient(path="./vectorstore/chroma_db")
+    persistent_client = chromadb.PersistentClient(path=persist_directory)
+
     langchain_chroma = Chroma(
         client=persistent_client,
-        collection_name="kardex",
+        collection_name=os.environ.get("COLLECTION_NAME"),
         embedding_function=OllamaEmbeddings(model="mxbai-embed-large"),
     )
-    # print("There are", langchain_chroma._collection.count(), "in the collection")
+    print("There are", langchain_chroma._collection.count(), "in the collection")
+
     # print("There are", langchain_chroma.similarity_search("bmw?"))
     return langchain_chroma.as_retriever(
         search_type="mmr", search_kwargs={"k": 3, "lambda_mult": 0.25}
