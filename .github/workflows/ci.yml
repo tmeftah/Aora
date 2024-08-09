@@ -20,6 +20,8 @@ jobs:
         run: |
           cd backend
           pip install -r requirements.txt
+          touch .env
+          echo "DATABASE_PATH=chroma_db \n COLLECTION_NAME=langchain" >> .env
 
       - name: Start FastAPI app
         run: |
