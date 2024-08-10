@@ -1,5 +1,5 @@
-from backend.sqlalchemy_models import User
-from backend.sessions import session
+from backend.models.sqlalchemy_models import User
+from backend.db.sessions import session
 from backend.oauth import encrypt_password, get_user
 
 

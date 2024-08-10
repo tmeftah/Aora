@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from backend.pydantic_models import Token
+from backend.models.pydantic_models import Token
 from backend.oauth import authenticate_user, create_access_token
 from backend.config import ACCESS_TOKEN_EXPIRE_MINUTES
 from fastapi.security import OAuth2PasswordRequestForm
