@@ -1,6 +1,6 @@
 from backend.models.sqlalchemy_models import User
 from backend.db.sessions import session
-from backend.oauth import encrypt_password, get_user
+from backend.service.oauth import encrypt_password, get_user
 
 
 def populate_admin_user():
