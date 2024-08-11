@@ -5,7 +5,7 @@ from backend.api.health import health_router
 from backend.api.user import user_router
 from backend.api.token import token_router
 from backend.api.query import query_router
-from backend.utils import populate_admin_user
+from backend.db.utils import populate_admin_user
 
 
 app = FastAPI()
