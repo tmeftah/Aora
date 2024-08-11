@@ -6,7 +6,7 @@ from backend.rag_llms_langchain import chain
 from backend.embeddings.ingest import get_vectorstore
 
 
-def query_service(query: str):
+async def query_service(query: str):
     """
     Process a query and return a streaming response.
     """
