@@ -1,8 +1,13 @@
 <template>
-  <div class="row">
-    <q-card class="col-0 col-sm-5 bg-primary xs-hide">
-      <div class="row q-px-xl q-pb-xl full-height flex flex-center">
-        <div class="text-h4 text-uppercase text-white" style="min-width: 220px">
+  <div class="row flex justify-center">
+    <q-card
+      class="col-sm-5 bg-primary xs-hide no-shadow"
+      square
+      bordered
+      id="leftcard"
+    >
+      <div class="row q-px-xl q-pb-xl full-height content-center">
+        <div class="text-h4 text-uppercase text-white">
           <span class="text-weight-bolder">Aora.</span>
 
           <p class="text-caption text-weight-bold">Ahead Of Rest, Always.</p>
@@ -13,7 +18,7 @@
       </div>
     </q-card>
 
-    <q-card class="col-12 col-sm-5">
+    <q-card class="col-12 col-sm-5 no-shadow" bordered id="rightcard">
       <div class="row q-pa-sm-sm q-pa-md">
         <div class="col-12">
           <q-card-section>
@@ -39,8 +44,8 @@
                 name="Email"
                 :rules="[
                   (val) => !!val || 'Email required!',
-                  (val, rules) =>
-                    rules.email(val) || 'Please enter a valid email address',
+                  // (val, rules) =>
+                  //   rules.email(val) || 'Please enter a valid email address',
                 ]"
               />
 
@@ -53,7 +58,7 @@
                 :rules="[
                   (val) => !!val || 'Please enter a password',
                   (val) =>
-                    !(val.length <= 8) || 'Please type more than 8 characters',
+                    !(val.length <= 3) || 'Please type more than 8 characters',
                 ]"
               >
                 <template v-slot:append>
@@ -105,7 +110,13 @@
 
 <script setup>
 import { ref, reactive } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "../stores/auth";
+
 const isPwd = ref(true);
+
+const authStore = useAuthStore();
+const router = useRouter();
 
 const user = reactive({
   email: null,
@@ -114,11 +125,32 @@ const user = reactive({
 
 const form = ref(null);
 
-const submit = async () => {
+async function submit() {
   if (form.value.validate()) {
-    console.log("valid..");
+    await authStore
+      .login(user.email, user.password)
+      .then(() => {
+        authStore.getCurrentUser().then(() => {
+          if (authStore.user) {
+            router.push("/");
+          }
+        });
+      })
+
+      .catch((error) => {
+        console.log("Errorx");
+      });
   } else {
-    console.log("err validate form...");
+    console.log("not valid form");
   }
-};
+}
 </script>
+
+<style scoped>
+#leftcard {
+  border-top-left-radius: 4px !important;
+  border-bottom-left-radius: 4px !important;
+  z-index: 2;
+  right: -3px;
+}
+</style>
