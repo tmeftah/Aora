@@ -11,6 +11,7 @@
           Aora.
         </q-toolbar-title>
         <!-- Orion Inova -->
+        <q-btn flat round icon="logout" class="q-mr-xs" @click="logout" />
       </q-toolbar>
     </q-header>
 
@@ -32,6 +33,9 @@
 
 <script setup>
 import { ref } from "vue";
+import { useAuthStore } from "../stores/auth";
+import { useRouter } from "vue-router";
+
 import EssentialLink from "components/EssentialLink.vue";
 
 defineOptions({
@@ -61,8 +65,15 @@ const linksList = [
 
 const leftDrawerOpen = ref(false);
 const miniState = ref(true);
+const authStore = useAuthStore();
+const router = useRouter();
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
+}
+function logout() {
+  authStore.logout();
+
+  router.push("/login");
 }
 </script>
