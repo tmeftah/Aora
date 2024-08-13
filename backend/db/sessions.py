@@ -1,5 +1,6 @@
-from sqlalchemy import create_engine
 import os
+
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from backend.models.sqlalchemy_models import Base
@@ -14,13 +15,12 @@ def create_tables():
 
 
 # Dependency Injection added
-
-
 def get_db():
     db = SessionLocal()
     try:
         yield db
     except Exception as e:
+        print(e)
         db.rollback()
         raise
     finally:
