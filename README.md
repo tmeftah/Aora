@@ -69,13 +69,13 @@ you need ollama to run llms locally. Ollama have to be installed as docker conta
 docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
 ```
 
-After installing and runnig the ollama docker container, you have to connect to that container and pull the llm model you want to use.
+After installing and running the ollama docker container, you have to connect to that container and pull the llm model you want to use.
 
 ```bash
 docker exec -it ollama ollama pull llama3.1
 ```
 
-To run a stoped ollama container run following command
+To run a stopped ollama container run following command
 
 ```bash
 docker start ollama
@@ -87,7 +87,15 @@ you can follow the official ollama documenation for more settings.
 
 To create a vector datastore of your documents, you need follow this steps:
 
-- 1 inside the backend folder create folder named 'docs'
+1.  Inside the **'backend/embeddings'** folder create folder named 'docs' and add you pdf documents.
+2.  run following command
+
+```bash
+cd backend/embeddings
+
+python ingest.py # create embeddings.
+
+```
 
 ## Settings
 
