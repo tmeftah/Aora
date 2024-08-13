@@ -18,9 +18,9 @@ from sqlalchemy.orm import Session
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_tables()
-    # db_generator = get_db()
-    # db: Session = next(db_generator)
-    # populate_admin_user(db)
+    db_generator = get_db()
+    db: Session = next(db_generator)
+    populate_admin_user(db)
     yield
 
 app = FastAPI(

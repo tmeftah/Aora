@@ -6,7 +6,7 @@ from backend.service.oauth import encrypt_password, get_user_by_name
 
 
 def populate_admin_user(db: Session = Depends(get_db)):
-    admin_user = get_user_by_name("admin")
+    admin_user = get_user_by_name("admin", db)
     if not admin_user:
         admin_user = User(
             username="admin",
