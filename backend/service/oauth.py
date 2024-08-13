@@ -5,9 +5,10 @@ from fastapi import Depends, HTTPException
 
 from backend.config import SECRET_KEY, ALGORITHM
 from backend.models.sqlalchemy_models import User
-from backend.db.sessions import session
+from backend.db.sessions import get_db
 from backend.models.pydantic_models import TokenData
 
+from sqlalchemy.orm import Session
 from bcrypt import hashpw, gensalt, checkpw
 from datetime import datetime, timedelta
 from typing import Optional
@@ -23,8 +24,8 @@ def verify_password(plain_password: str, hashed_password: str) -> bytes:
     return checkpw(plain_password.encode(), hashed_password)
 
 
-def get_user(username: str):
-    return session.query(User).filter(User.username == username).first()
+def get_user(username: str, db: Session = Depends(get_db)):
+    return db.query(User).filter(User.username == username).first()
 
 
 def authenticate_user(username: str, password: str):
