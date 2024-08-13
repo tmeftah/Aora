@@ -24,36 +24,49 @@ def verify_password(plain_password: str, hashed_password: str) -> bytes:
     return checkpw(plain_password.encode(), hashed_password)
 
 
-def get_user(username: str, db: Session = Depends(get_db)):
-    return db.query(User).filter(User.username == username).first()
+def get_user_by_name(username: str, db: Session):
+    """ Get user by name"""
+    user = db.query(User).filter(User.username == username).first()
+    return user if user else None
 
 
-def authenticate_user(username: str, password: str):
-    user = get_user(username)
+def authenticate_user(username: str, password: str, db: Session):
+    user = get_user_by_name(username, db)
     if not user or not verify_password(password, user.password_hash):
         return False
     return user
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
-    credentials_exception = HTTPException(
-        status_code=401,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
-            raise credentials_exception
+            raise HTTPException(
+                status_code=401,
+                detail="Could not validate credentials",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
         token_data = TokenData(username=username)
+
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token has expired")
+
     except jwt.InvalidTokenError:
-        raise credentials_exception
-    user = get_user(username=token_data.username)
+        raise HTTPException(
+            status_code=401,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    user = get_user_by_name(username=token_data.username)
     if user is None:
-        raise credentials_exception
+        raise HTTPException(
+            status_code=401,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     return user
 
 
