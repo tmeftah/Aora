@@ -26,13 +26,10 @@ jobs:
       - name: Start FastAPI app
         run: |
           cd backend
-          # nohup fastapi dev > /dev/null 2>&1 &
-          # echo $! > uvicorn.pid
-          fastapi dev
+          nohup fastapi dev > /dev/null 2>&1 &
+          echo $! > uvicorn.pid
           sleep 10
           echo "Aora-API is running"
-          response=$(curl -s http://127.0.0.1:8000/health)
-          echo "Response: $response"
 
       - name: Check FastAPI /health endpoint
         run: |
