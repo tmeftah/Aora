@@ -4,11 +4,12 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from backend.db.sessions import get_db
+from backend.exceptions import DuplicateUserException
 from backend.exceptions import NoValidPermissionsException
 from backend.exceptions import UserNotFoundException
 from backend.models.sqlalchemy_models import User
-from backend.service.oauth import encrypt_password
 from backend.service.oauth import get_current_user
+from backend.service.user_service import created_user
 from backend.service.user_service import fetch_user
 from backend.service.user_service import get_all_user
 from backend.service.user_service import get_user_details
@@ -79,17 +80,23 @@ async def create_user(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    """Create a new user"""
+    try:
+        return created_user(current_user, db, username, password, role)
 
-    if current_user.role < 5:
+    except NoValidPermissionsException as e:
+        raise HTTPException(status_code=403, detail=str(e))
+
+    except DuplicateUserException as e:
+        raise HTTPException(status_code=403, detail=str(e))
+
+    except Exception as e:
+        print(e)  # remove later
         raise HTTPException(
-            status_code=403, detail="Only admin users can create new users"
+            status_code=500,
+            detail="Internal Server error",
+            headers={"WWW-Authenticate": "Bearer"},
         )
-    user = User(
-        username=username, password_hash=encrypt_password(password), role=role
-    )
-    db.add(user)
-    db.commit()
-    return {"username": user.username, "role": user.role}
 
 
 @user_router.put("/{user_id}")

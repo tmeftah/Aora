@@ -14,3 +14,9 @@ class UserNotFoundException(Exception):
     def __init__(self):
         self.message = "User does not exist"
         super().__init__(self.message)
+
+
+class DuplicateUserException(Exception):
+    def __init__(self):
+        self.message = "User with same name exists"
+        super().__init__(self.message)

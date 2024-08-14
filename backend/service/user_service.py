@@ -2,10 +2,12 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
+from backend.exceptions import DuplicateUserException
 from backend.exceptions import NoValidPermissionsException
 from backend.exceptions import UserNotFoundException
 from backend.models.pydantic_models import UserPydantic
 from backend.models.sqlalchemy_models import User
+from backend.service.oauth import encrypt_password
 
 
 def get_all_user(current_user: User, db: Session) -> List[UserPydantic]:
@@ -40,6 +42,39 @@ def get_user_details(
     if not user:
         raise UserNotFoundException()
 
+    return UserPydantic.model_validate(
+        {"username": user.username, "role": user.role}
+    )
+
+
+def get_user_by_name(name: str, db: Session) -> User | None:
+    """Get user by name"""
+
+    user = db.query(User).filter(User.username == name).first()
+    return user if user else None
+
+
+def created_user(
+    current_user: User,
+    db: Session,
+    username: str,
+    password: str,
+    role: int,
+) -> UserPydantic:
+    """Create a user based on the information passed"""
+
+    if current_user.role < 5:
+        raise NoValidPermissionsException()
+
+    user_exists = get_user_by_name(username, db)
+    if user_exists:
+        raise DuplicateUserException()
+
+    user = User(
+        username=username, password_hash=encrypt_password(password), role=role
+    )
+    db.add(user)
+    db.commit()
     return UserPydantic.model_validate(
         {"username": user.username, "role": user.role}
     )
