@@ -10,6 +10,7 @@ from backend.exceptions import UserNotFoundException
 from backend.models.sqlalchemy_models import User
 from backend.service.oauth import get_current_user
 from backend.service.user_service import created_user
+from backend.service.user_service import delete_user_details
 from backend.service.user_service import fetch_user
 from backend.service.user_service import get_all_user
 from backend.service.user_service import get_user_details
@@ -140,16 +141,22 @@ async def delete_user(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-
-    if current_user.id != user_id and current_user.role < 5:
-        raise HTTPException(
-            status_code=403, detail="Only admin users can delete other users"
+    """Delete a specific user"""
+    try:
+        return delete_user_details(
+            user_id=user_id, current_user=current_user, db=db
         )
 
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+    except NoValidPermissionsException as e:
+        raise HTTPException(status_code=403, detail=str(e))
 
-    db.delete(user)
-    db.commit()
-    return {"message": "User deleted"}
+    except UserNotFoundException as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+    except Exception as e:
+        print(e)  # remove later
+        raise HTTPException(
+            status_code=500,
+            detail="Internal Server error",
+            headers={"WWW-Authenticate": "Bearer"},
+        )

@@ -107,6 +107,7 @@ def update_user_details(
     password: str,
     role: int,
 ):
+    """Update user details based on passed user id"""
 
     user_has_permissions = check_current_user_permissions(current_user, db)
 
@@ -124,3 +125,20 @@ def update_user_details(
     return UserPydantic.model_validate(
         {"username": user.username, "role": user.role}
     )
+
+
+def delete_user_details(current_user: User, db: Session, user_id: int) -> dict:
+    """Delete user based on user id"""
+
+    user_has_permissions = check_current_user_permissions(current_user, db)
+
+    if not user_has_permissions:
+        raise NoValidPermissionsException()
+
+    user = get_user_by_id(user_id=user_id, db=db)
+    if not user:
+        raise UserNotFoundException()
+
+    db.delete(user)
+    db.commit()
+    return {"message": "User deleted"}
