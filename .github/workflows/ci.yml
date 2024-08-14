@@ -42,6 +42,11 @@ jobs:
             exit 1
           fi
 
+      - name: Run tests
+        run: |
+          cd backend
+          pytest -v
+
   Vue-frontend:
     runs-on: ubuntu-latest
     needs: FastApi-backend
