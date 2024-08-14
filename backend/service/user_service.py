@@ -30,12 +30,24 @@ def fetch_user(current_user: User):
     )
 
 
+def check_current_user_permissions(current_user: User, user_id: int):
+    """Check whether the current user
+    has permissions to perform any
+    operations"""
+
+    if current_user.id != user_id and current_user.role < 5:
+        return False
+    return True
+
+
 def get_user_details(
     current_user: User, db: Session, user_id: int
 ) -> UserPydantic:
     """Get details of a specific user"""
 
-    if current_user.id != user_id and current_user.role < 5:
+    user_has_permissions = check_current_user_permissions(current_user, db)
+
+    if not user_has_permissions:
         raise NoValidPermissionsException()
 
     user = db.query(User).filter(User.id == user_id).first()
@@ -51,6 +63,13 @@ def get_user_by_name(name: str, db: Session) -> User | None:
     """Get user by name"""
 
     user = db.query(User).filter(User.username == name).first()
+    return user if user else None
+
+
+def get_user_by_id(user_id: str, db: Session) -> User | None:
+    """Get user by id"""
+
+    user = db.query(User).filter(User.id == user_id).first()
     return user if user else None
 
 
@@ -74,6 +93,33 @@ def created_user(
         username=username, password_hash=encrypt_password(password), role=role
     )
     db.add(user)
+    db.commit()
+    return UserPydantic.model_validate(
+        {"username": user.username, "role": user.role}
+    )
+
+
+def update_user_details(
+    current_user: User,
+    db: Session,
+    user_id: int,
+    username: str,
+    password: str,
+    role: int,
+):
+
+    user_has_permissions = check_current_user_permissions(current_user, db)
+
+    if not user_has_permissions:
+        raise NoValidPermissionsException()
+
+    user = get_user_by_id(user_id)
+    if not user:
+        raise UserNotFoundException()
+
+    user.username = username
+    user.password = password
+    user.role = role
     db.commit()
     return UserPydantic.model_validate(
         {"username": user.username, "role": user.role}
