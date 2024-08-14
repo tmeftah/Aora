@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column
+from sqlalchemy import Integer
+from sqlalchemy import String
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -14,11 +16,15 @@ class User(Base):
 
 
 class Documents(Base):
-    """ Documents table where all the list of uploaded
+    """Documents table where all the list of uploaded
     documents are to be found"""
 
     __tablename__ = "documents"
+    # copy doc in /docs folder
+    # each doc a hash
+    # hash exists in metadata no embeddings
 
     id = Column(Integer, primary_key=True, index=True)
     filename = Column(String, unique=True, index=True)
+    filehash = Column(String, unique=True)
     content_type = Column(String)
