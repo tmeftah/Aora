@@ -5,11 +5,13 @@ from sqlalchemy.orm import Session
 
 from backend.db.sessions import get_db
 from backend.exceptions import NoValidPermissionsException
+from backend.exceptions import UserNotFoundException
 from backend.models.sqlalchemy_models import User
 from backend.service.oauth import encrypt_password
 from backend.service.oauth import get_current_user
 from backend.service.user_service import fetch_user
 from backend.service.user_service import get_all_user
+from backend.service.user_service import get_user_details
 
 
 user_router = APIRouter(
@@ -37,9 +39,7 @@ async def get_users(
     """Get all valid users"""
 
     try:
-
         return get_all_user(current_user, db)
-
     except NoValidPermissionsException as e:
         raise HTTPException(status_code=403, detail=str(e))
     except Exception as e:
@@ -56,14 +56,19 @@ async def read_user(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    if current_user.id != user_id and current_user.role < 5:
+    try:
+
+        return get_user_details(current_user, db, user_id)
+
+    except UserNotFoundException as e:
+        raise HTTPException(status_code=404, detail=str(e)) from e
+
+    except Exception as e:
         raise HTTPException(
-            status_code=403, detail="Only admin users can view other users"
-        )
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return {"username": user.username, "role": user.role}
+            status_code=403,
+            detail=str(e),
+            headers={"WWW-Authenticate": "Bearer"},
+        ) from e
 
 
 @user_router.post("/")
@@ -74,6 +79,7 @@ async def create_user(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+
     if current_user.role < 5:
         raise HTTPException(
             status_code=403, detail="Only admin users can create new users"

@@ -8,3 +8,9 @@ class NoValidPermissionsException(Exception):
     def __init__(self):
         self.message = "Only admin users can view all users"
         super().__init__(self.message)
+
+
+class UserNotFoundException(Exception):
+    def __init__(self):
+        self.message = "User does not exist"
+        super().__init__(self.message)
