@@ -15,3 +15,8 @@ class TokenData(BaseModel):
 class UserPydantic(BaseModel):
     username: str
     role: int
+
+
+class DocumentPydantic(BaseModel):
+    filename: str
+    content_type: str
