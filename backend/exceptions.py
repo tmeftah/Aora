@@ -20,3 +20,9 @@ class DuplicateUserException(Exception):
     def __init__(self):
         self.message = "User with same name exists"
         super().__init__(self.message)
+
+
+class NoDocumentsFoundException(Exception):
+    def __init__(self):
+        self.message = "No documents found in DB"
+        super().__init__(self.message)
