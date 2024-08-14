@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
 from backend.api.document import document_router
@@ -12,8 +13,6 @@ from backend.api.user import user_router
 from backend.db.sessions import create_tables
 from backend.db.sessions import get_db
 from backend.db.utils import populate_admin_user
-
-# from fastapi.responses import RedirectResponse
 
 
 @asynccontextmanager
@@ -48,11 +47,11 @@ app.include_router(query_router)
 app.include_router(document_router)
 
 
-# @app.get(
-#     "/",
-#     tags=["Docs"],
-#     description="Temporary redirect to docs to easy code development",
-#     include_in_schema=False
-# )
-# def redirect_to_docs():
-#     return RedirectResponse("/docs")
+@app.get(
+    "/",
+    tags=["Docs"],
+    description="Temporary redirect to docs to easy code development",
+    include_in_schema=False,
+)
+def redirect_to_docs():
+    return RedirectResponse("/docs")
