@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session
 
 from backend.config import ALGORITHM
 from backend.config import SECRET_KEY
+from backend.db.sessions import get_db
 from backend.models.pydantic_models import TokenData
 from backend.models.sqlalchemy_models import User
 
@@ -29,6 +30,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bytes:
 
 def get_user_by_name(username: str, db: Session):
     """Get user by name"""
+
     user = db.query(User).filter(User.username == username).first()
     return user if user else None
 
@@ -44,7 +46,9 @@ def authenticate_user(username: str, password: str, db: Session):
     return user
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+async def get_current_user(
+    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
+):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
@@ -66,7 +70,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    user = get_user_by_name(username=token_data.username)
+    user = get_user_by_name(username=token_data.username, db=db)
     if user is None:
         raise HTTPException(
             status_code=401,
