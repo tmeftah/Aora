@@ -114,7 +114,7 @@ def update_user_details(
     if not user_has_permissions:
         raise NoValidPermissionsException()
 
-    user = get_user_by_id(user_id)
+    user = get_user_by_id(user_id, db)
     if not user:
         raise UserNotFoundException()
 
