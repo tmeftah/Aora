@@ -37,15 +37,17 @@ def save_document(file: File, db: Session) -> DocumentPydantic:
     )
 
 
-def get_documents(db: Session) -> List[DocumentPydantic]:
+def get_all_documents(db: Session) -> List[DocumentPydantic]:
     """Get all documents"""
     documents = db.query(Documents).all()
     return documents if documents else None
 
 
-def get_all_documents(db) -> List[DocumentPydantic]:
-    """Get all documents from db"""
-    documents = get_documents(db)
+def document_list(db: Session) -> List[DocumentPydantic]:
+    """Get all documents from db if there exists none,
+    raise relevant exceptions"""
+
+    documents = get_all_documents(db)
     if not documents:
         raise NoDocumentsFoundException()
 

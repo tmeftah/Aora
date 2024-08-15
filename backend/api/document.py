@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from backend.db.sessions import get_db
 from backend.exceptions import NoDocumentsFoundException
-from backend.service.document_service import get_all_documents
+from backend.service.document_service import document_list
 from backend.service.document_service import save_document
 
 # from fastapi.responses import JSONResponse
@@ -48,7 +48,7 @@ async def upload_file(
 def list_documents(db: Session = Depends(get_db)):
     """List all the documents which exist in db"""
     try:
-        return get_all_documents(db)
+        return document_list(db)
 
     except NoDocumentsFoundException as e:
         raise HTTPException(status_code=404, detail=str(e))
