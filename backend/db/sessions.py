@@ -1,13 +1,27 @@
-from sqlalchemy import create_engine
+import os
 
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from backend.models.sqlalchemy_models import Base
 
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///aora.db")
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-engine = create_engine("sqlite:///users.db")
 
-Base.metadata.create_all(engine)
+def create_tables():
+    Base.metadata.create_all(bind=engine)
 
-session_maker = sessionmaker(bind=engine)
-session = session_maker()
+
+# Dependency Injection added
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    except Exception as e:
+        print(e)
+        db.rollback()
+        raise
+    finally:
+        db.close()

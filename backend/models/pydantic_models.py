@@ -1,5 +1,6 @@
-from pydantic import BaseModel
 from typing import Optional
+
+from pydantic import BaseModel
 
 
 class Token(BaseModel):
@@ -9,3 +10,13 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: Optional[str] = None
+
+
+class UserPydantic(BaseModel):
+    username: str
+    role: int
+
+
+class DocumentPydantic(BaseModel):
+    filename: str
+    content_type: str

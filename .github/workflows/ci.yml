@@ -13,8 +13,8 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
-          cache: 'pip'
+          python-version: "3.10"
+          cache: "pip"
 
       - name: Install dependencies
         run: |
@@ -29,10 +29,11 @@ jobs:
           nohup fastapi dev > /dev/null 2>&1 &
           echo $! > uvicorn.pid
           sleep 10
+          echo "Aora-API is running"
 
       - name: Check FastAPI /health endpoint
         run: |
-          response=$(curl -s http://127.0.0.1:8000/health)
+          response=$(curl -s http://127.0.0.1:8000/health/)
           echo "Response: $response"
           if [ "$response" == '{"status":"Active"}' ]; then
             echo "Health check passed"
@@ -40,6 +41,11 @@ jobs:
             echo "Health check failed"
             exit 1
           fi
+
+      - name: Run tests
+        run: |
+          cd backend
+          pytest -v
 
   Vue-frontend:
     runs-on: ubuntu-latest
@@ -52,7 +58,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install frontend dependencies
         run: |
