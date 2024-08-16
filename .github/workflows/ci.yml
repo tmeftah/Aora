@@ -49,6 +49,7 @@ jobs:
 
   Aora-backend-Build:
     runs-on: ubuntu-latest
+    needs: AORA-backend-Checks
 
     steps:
       - name: Checkout code
@@ -70,7 +71,7 @@ jobs:
 
   Aora-frontend-Checks:
     runs-on: ubuntu-latest
-    needs: FastApi-backend
+    needs: Aora-backend-Build
 
     steps:
       - name: Checkout code
