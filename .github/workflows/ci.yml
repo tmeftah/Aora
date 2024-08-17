@@ -58,6 +58,14 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install docker-compose -y
+
+      - name: Check Docker Compose version
+        run: docker-compose --version
+
       - name: Build Docker images
         run: |
           docker-compose up
