@@ -58,16 +58,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build Docker image
+      - name: Build Docker images
         run: |
-          cd backend
-          docker build -t aora_backend .
-
-      - name: Run Docker container
-        run: |
-          docker run -d -p 8000:8000 --name aora_backend aora_backend
-          sleep 10
-          echo "Aora-API Backend is successfully built"
+          docker-compose up
+          echo "Successfully built AORA"
 
   Aora-frontend-Checks:
     runs-on: ubuntu-latest
