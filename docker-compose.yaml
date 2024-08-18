@@ -1,5 +1,4 @@
 version: '3.3'
-name: 'aora'
 
 networks:
   aora_network:
