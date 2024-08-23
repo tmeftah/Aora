@@ -6,14 +6,20 @@ from fastapi import File
 from sqlalchemy.orm import Session
 
 from backend.exceptions import NoDocumentsFoundException
+from backend.exceptions import NoValidPermissionsException
 from backend.models.pydantic_models import DocumentPydantic
 from backend.models.sqlalchemy_models import Documents
+from backend.service.oauth import check_current_user_permissions
 
 
-def save_document(file: File, db: Session) -> DocumentPydantic:
+def save_document(current_user, file: File, db: Session) -> DocumentPydantic:
     """Gets the uploaded document, saves the document
     in the docs folder and creates a hash of the document
     and saves it in db"""
+
+    user_has_permissions = check_current_user_permissions(current_user, db)
+    if not user_has_permissions:
+        raise NoValidPermissionsException()
 
     file_directory = "docs"
     os.makedirs(file_directory, exist_ok=True)
@@ -43,9 +49,13 @@ def get_all_documents(db: Session) -> List[DocumentPydantic]:
     return documents if documents else None
 
 
-def document_list(db: Session) -> List[DocumentPydantic]:
+def document_list(current_user, db: Session) -> List[DocumentPydantic]:
     """Get all documents from db if there exists none,
     raise relevant exceptions"""
+
+    user_has_permissions = check_current_user_permissions(current_user, db)
+    if not user_has_permissions:
+        raise NoValidPermissionsException()
 
     documents = get_all_documents(db)
     if not documents:

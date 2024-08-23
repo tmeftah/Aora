@@ -95,3 +95,13 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
     return encoded_jwt
+
+
+def check_current_user_permissions(current_user: User, user_id: int):
+    """Check whether the current user
+    has permissions to perform any
+    operations"""
+
+    if current_user.id != user_id and current_user.role < 5:
+        return False
+    return True

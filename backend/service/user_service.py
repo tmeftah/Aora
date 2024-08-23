@@ -7,6 +7,7 @@ from backend.exceptions import NoValidPermissionsException
 from backend.exceptions import UserNotFoundException
 from backend.models.pydantic_models import UserPydantic
 from backend.models.sqlalchemy_models import User
+from backend.service.oauth import check_current_user_permissions
 from backend.service.oauth import encrypt_password
 
 
@@ -28,16 +29,6 @@ def fetch_user(current_user: User):
     return UserPydantic.model_validate(
         {"username": current_user.username, "role": current_user.role}
     )
-
-
-def check_current_user_permissions(current_user: User, user_id: int):
-    """Check whether the current user
-    has permissions to perform any
-    operations"""
-
-    if current_user.id != user_id and current_user.role < 5:
-        return False
-    return True
 
 
 def get_user_details(
