@@ -17,13 +17,13 @@ Highly recommended:
   - Remark: The extension is also called **Volar**.
 - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
-📑 Note: The VSCode `settings.json` is pushed to git. In order to properly use the defined formatting settings, you definitely will need the above mentioned extension.
-
 Further helpful VSCode extensions:
 
 - [Vue.js Extension Pack](https://marketplace.visualstudio.com/items?itemName=mubaidr.vuejs-extension-pack) by Muhammad Ubaid Raza (Collection of extensions providing syntax highlighting, code format, code snippets, IntelliSense, linting support, npm & node tools)
 - [Vue 3 Snippets](https://marketplace.visualstudio.com/items?itemName=hollowtree.vue-snippets) by hollowtree
 - [Peacock](https://marketplace.visualstudio.com/items?itemName=johnpapa.vscode-peacock) by John Papa: VSCode Workspace color scheme for multiple instances.
+
+📑 Note: The VSCode `settings.json` is pushed to git. In order to properly use the defined formatting settings, you definitely will need the above mentioned extension.
 
 ## ⚙ Project Setup
 
@@ -161,17 +161,17 @@ python ingest.py # create embeddings.
   API=http://ip-address-of-api:port
   ```
 
-## Contributing
+## 💫 Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request to contribute to the project.
 
-**Branch Strategy**
+### **Branch Strategy**
 
 - **`main` Branch:** Represents the production-ready codebase. Only fully tested and approved code gets merged here.
 - **`develop` Branch:** The main integration branch. All feature branches are merged here for testing before going to `main`.
 - **Feature Branches (one per feature):** Short-lived branches where each developer works on a specific feature, bug fix, or task in isolation.
 
-**Workflow (Developer A and Developer B)**
+### **Workflow (Developer A and Developer B)**
 
 1. **Project Setup (Do This Once)**
 
@@ -243,13 +243,13 @@ Contributions are welcome! Please open an issue or submit a pull request to cont
      git push origin main
      ```
 
-**Keys to Minimizing Conflicts**
+### **Keys to Minimizing Conflicts**
 
 - **Frequent Pulls and Merges:** Regularly pulling from `develop` and merging into your feature branches helps identify and resolve conflicts earlier.
 - **Effective Communication:** Talk to your teammate! Discuss what you're working on to avoid overlapping changes in the same files.
 - **Small, Focused Features:** Breaking work into smaller pieces makes conflicts less likely and easier to manage.
 
-**Resolving Conflicts (When They Happen)**
+### **Resolving Conflicts (When They Happen)**
 
 - If `git merge` encounters a conflict, it will mark the conflicting areas in your code.
 - Open the affected files, manually edit them to choose the correct changes, and then use `git add [filename]` to stage the resolved files.
