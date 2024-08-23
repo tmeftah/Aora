@@ -4,17 +4,13 @@ import uuid
 from fastapi.responses import StreamingResponse
 
 from backend.embeddings.ingest import get_vectorstore
-from backend.exceptions import NoValidPermissionsException
-from backend.models.sqlalchemy_models import User
 from backend.rag_llms_langchain import chain
 
 
-async def query_service(query: str, current_user: User):
+async def query_service(query: str):
     """
     Process a query and return a streaming response.
     """
-    if current_user.role < 5:
-        raise NoValidPermissionsException()
 
     store = get_vectorstore()
     docs = store.invoke(query)

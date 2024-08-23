@@ -7,7 +7,6 @@ from sqlalchemy.orm import Session
 
 from backend.db.sessions import get_db
 from backend.exceptions import NoDocumentsFoundException
-from backend.exceptions import NoValidPermissionsException
 from backend.models.sqlalchemy_models import User
 from backend.service.document_service import document_list
 from backend.service.document_service import save_document
@@ -28,7 +27,7 @@ document_router = APIRouter(
 )
 
 
-@document_router.post("/upload")
+@document_router.post("/upload", dependencies=[Depends(get_current_user)])
 async def upload_file(
     current_user: User = Depends(get_current_user),
     file: UploadFile = File(...),
@@ -40,10 +39,8 @@ async def upload_file(
     and content type as a JSON response.
     """
     try:
-        return save_document(current_user=current_user, file=file, db=db)
+        return save_document(file=file, db=db)
 
-    except NoValidPermissionsException as e:
-        raise HTTPException(status_code=403, detail=str(e))
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -52,19 +49,17 @@ async def upload_file(
         )
 
 
-@document_router.get("/")
+@document_router.get("/", dependencies=[Depends(get_current_user)])
 def list_documents(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """List all the documents which exist in db"""
     try:
-        return document_list(current_user, db)
+        return document_list(db)
 
     except NoDocumentsFoundException as e:
         raise HTTPException(status_code=404, detail=str(e))
-    except NoValidPermissionsException as e:
-        raise HTTPException(status_code=403, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
