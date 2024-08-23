@@ -18,13 +18,13 @@ query_router = APIRouter(
 
 
 @query_router.get("/", dependencies=[Depends(get_current_user)])
-async def query(query: str):
+async def query(query: str, model_name: str):
     """
     Handle query requests from user and
     return appropriate response
     """
     try:
-        response = await query_service(query=query)
+        response = await query_service(query=query, model_name=model_name)
         return response
     except NoValidPermissionsException as e:
         raise HTTPException(status_code=403, detail=str(e))
