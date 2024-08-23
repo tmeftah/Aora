@@ -9,7 +9,6 @@ from backend.exceptions import NoDocumentsFoundException
 from backend.exceptions import NoValidPermissionsException
 from backend.models.pydantic_models import DocumentPydantic
 from backend.models.sqlalchemy_models import Documents
-from backend.service.oauth import check_current_user_permissions
 
 
 def save_document(current_user, file: File, db: Session) -> DocumentPydantic:
@@ -17,8 +16,7 @@ def save_document(current_user, file: File, db: Session) -> DocumentPydantic:
     in the docs folder and creates a hash of the document
     and saves it in db"""
 
-    user_has_permissions = check_current_user_permissions(current_user, db)
-    if not user_has_permissions:
+    if current_user.role < 5:
         raise NoValidPermissionsException()
 
     file_directory = "docs"
@@ -53,8 +51,7 @@ def document_list(current_user, db: Session) -> List[DocumentPydantic]:
     """Get all documents from db if there exists none,
     raise relevant exceptions"""
 
-    user_has_permissions = check_current_user_permissions(current_user, db)
-    if not user_has_permissions:
+    if current_user.role < 5:
         raise NoValidPermissionsException()
 
     documents = get_all_documents(db)

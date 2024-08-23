@@ -1,9 +1,7 @@
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
-from sqlalchemy.orm import Session
 
-from backend.db.sessions import get_db
 from backend.exceptions import NoValidPermissionsException
 from backend.models.sqlalchemy_models import User
 from backend.service.oauth import get_current_user
@@ -21,19 +19,13 @@ query_router = APIRouter(
 
 
 @query_router.get("/")
-async def query(
-    query: str,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
+async def query(query: str, current_user: User = Depends(get_current_user)):
     """
     Handle query requests from user and
     return appropriate response
     """
     try:
-        response = await query_service(
-            query=query, current_user=current_user, db=db
-        )
+        response = await query_service(query=query, current_user=current_user)
         return response
     except NoValidPermissionsException as e:
         raise HTTPException(status_code=403, detail=str(e))

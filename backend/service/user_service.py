@@ -36,7 +36,9 @@ def get_user_details(
 ) -> UserPydantic:
     """Get details of a specific user"""
 
-    user_has_permissions = check_current_user_permissions(current_user, db)
+    user_has_permissions = check_current_user_permissions(
+        current_user, user_id
+    )
 
     if not user_has_permissions:
         raise NoValidPermissionsException()
@@ -100,7 +102,9 @@ def update_user_details(
 ):
     """Update user details based on passed user id"""
 
-    user_has_permissions = check_current_user_permissions(current_user, db)
+    user_has_permissions = check_current_user_permissions(
+        current_user, user_id
+    )
 
     if not user_has_permissions:
         raise NoValidPermissionsException()
@@ -121,7 +125,9 @@ def update_user_details(
 def delete_user_details(current_user: User, db: Session, user_id: int) -> dict:
     """Delete user based on user id"""
 
-    user_has_permissions = check_current_user_permissions(current_user, db)
+    user_has_permissions = check_current_user_permissions(
+        current_user, user_id
+    )
 
     if not user_has_permissions:
         raise NoValidPermissionsException()

@@ -42,7 +42,7 @@ async def get_users(
     """Get all valid users"""
 
     try:
-        return get_all_user(current_user, db)
+        return get_all_user(current_user=current_user, db=db)
     except NoValidPermissionsException as e:
         raise HTTPException(status_code=403, detail=str(e))
     except Exception as e:
@@ -61,7 +61,9 @@ async def read_user(
 ):
     try:
 
-        return get_user_details(current_user, db, user_id)
+        return get_user_details(
+            current_user=current_user, db=db, user_id=user_id
+        )
 
     except UserNotFoundException as e:
         raise HTTPException(status_code=404, detail=str(e)) from e
@@ -84,7 +86,13 @@ async def create_user(
 ):
     """Create a new user"""
     try:
-        return created_user(current_user, db, username, password, role)
+        return created_user(
+            current_user=current_user,
+            db=db,
+            username=username,
+            password=password,
+            role=role,
+        )
 
     except NoValidPermissionsException as e:
         raise HTTPException(status_code=403, detail=str(e))
