@@ -26,3 +26,9 @@ class NoDocumentsFoundException(Exception):
     def __init__(self):
         self.message = "No documents found in DB"
         super().__init__(self.message)
+
+
+class ModelsNotRetrievedException(Exception):
+    def __init__(self):
+        self.message = "No Ollama Models found"
+        super().__init__(self.message)
