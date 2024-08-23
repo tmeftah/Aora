@@ -1,81 +1,122 @@
 # Aora | Ahead Of Rest, Always.
 
+## 📜 About
+
 Aora is an application designed to leverage AI for advanced document handling and natural language processing. This repository contains both backend and frontend components to get the application up and running.
 
-## Installation
+## 📟 Recommended Setup
 
-### Backend
+Highly recommended:
 
-1. **Navigate to the backend directory:**
+- [VSCode](https://code.visualstudio.com/)
+- [Python](https://www.python.org/downloads/)
+- [Docker](https://www.docker.com/get-started)
+- [Node](https://nodejs.org/en/download/package-manager)
+- [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) by Vue: Inter alia code formatter used for Vue.
+  - 🛑 Attention: Disable Vetur!
+  - Remark: The extension is also called **Volar**.
+- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
-   ```bash
-   cd backend/
-   ```
+📑 Note: The VSCode `settings.json` is pushed to git. In order to properly use the defined formatting settings, you definitely will need the above mentioned extension.
 
-2. **Create a virtual environment:**
+Further helpful VSCode extensions:
 
-   ```bash
-   python -m venv venv
-   ```
+- [Vue.js Extension Pack](https://marketplace.visualstudio.com/items?itemName=mubaidr.vuejs-extension-pack) by Muhammad Ubaid Raza (Collection of extensions providing syntax highlighting, code format, code snippets, IntelliSense, linting support, npm & node tools)
+- [Vue 3 Snippets](https://marketplace.visualstudio.com/items?itemName=hollowtree.vue-snippets) by hollowtree
+- [Peacock](https://marketplace.visualstudio.com/items?itemName=johnpapa.vscode-peacock) by John Papa: VSCode Workspace color scheme for multiple instances.
 
-3. **Activate the virtual environment:**
+## ⚙ Project Setup
 
-   - On Windows:
-     ```bash
-     venv\Scripts\activate
-     ```
-   - On macOS/Linux:
-     ```bash
-     source venv/bin/activate
-     ```
+### Clone the Git repository
 
-4. **Install all required packages:**
+```sh
+git clone https://github.com/tmeftah/Aora.git
+```
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+### Setup Backend
 
-5. **Run the development server:**
+- **Navigate to the backend directory:**
 
-   ```bash
-   fastapi dev
-   ```
+  ```bash
+  cd backend/
+  ```
 
-### Frontend
+- **Create a virtual environment:**
 
-1. **Navigate to the frontend directory:**
+  ```bash
+  python -m venv venv
+  ```
 
-   ```bash
-   cd frontend
-   ```
+- **Activate the virtual environment:**
 
-2. **Install all necessary packages:**
+  - On Windows:
+    ```bash
+    venv\Scripts\activate
+    ```
+  - On macOS/Linux:
+    ```bash
+    source venv/bin/activate
+    ```
 
-   ```bash
-   npm install
-   ```
+- **Install all required packages:**
 
-3. **Run the development server:**
+  ```bash
+  pip install -r requirements.txt
+  ```
 
-   ```bash
-   npm run dev
-   ```
+- **Run the development server:**
 
-### Ollama
+  ```bash
+  fastapi dev
+  ```
 
-you need ollama to run llms locally. Ollama have to be installed as docker container on your machine (docker have to run also).
+### Setup Frontend
+
+- **Navigate to the frontend directory:**
+
+  ```bash
+  cd frontend
+  ```
+
+- **Install all necessary packages:**
+
+  ```bash
+  npm install
+  ```
+
+- **Run the development server:**
+
+  ```bash
+  npm run dev
+  ```
+
+### Setup Ollama LLM with Docker
+
+You need ollama to run llms locally. Ollama have to be installed as docker container on your machine (docker have to run also).
+
+Install and Run Ollama Docker Container
+
+Ensure Docker is installed and running on your machine. Then, install and run the Ollama container with the following command:
 
 ```bash
 docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
 ```
 
+This will set up and start the Ollama container in the background, with the necessary volumes and ports configured.
+
 After installing and running the ollama docker container, you have to connect to that container and pull the llm model you want to use.
+
+#### Download LLM Model
 
 ```bash
 docker exec -it ollama ollama pull llama3.1
 ```
 
-To run a stopped ollama container run following command
+Replace llama3.1 with the appropriate model version, if necessary.
+
+#### Manage the Ollama Container
+
+To start the Ollama container if it is stopped, run the following command:
 
 ```bash
 docker start ollama
@@ -83,7 +124,7 @@ docker start ollama
 
 you can follow the official ollama documenation for more settings.
 
-### Create Embeddings
+#### Create Embeddings
 
 To create a vector datastore of your documents, you need follow this steps:
 
@@ -97,30 +138,28 @@ python ingest.py # create embeddings.
 
 ```
 
-## Settings
+## 📚 Configuration Settings
 
-### Environments
+### Backend Environment Configuration
 
-1. **Backend Environment Settings:**
+- Create an `.env` file inside the `backend` folder with the following settings:
 
-   Create an `.env` file inside the `backend` folder with the following settings:
+  ```env
+  SECRET_KEY=<your_secret_key>
+  PUBLIC_KEY=<your_public_key>
+  LANGFUSE_HOST=<your_langfuse_host>
+  DATABASE_PATH=<chroma_db>
+  COLLECTION_NAME=<langchain>
 
-   ```env
-   SECRET_KEY=<your_secret_key>
-   PUBLIC_KEY=<your_public_key>
-   LANGFUSE_HOST=<your_langfuse_host>
-   DATABASE_PATH=<chroma_db>
-   COLLECTION_NAME=<langchain>
+  ```
 
-   ```
+### Frontend Environment Configuration
 
-2. **Frontend Environment Settings:**
+- Create an `.env` file inside the `frontend` folder with the following settings for the UI:
 
-   Create an `.env` file inside the `frontend` folder with the following settings for the UI:
-
-   ```env
-   API=http://ip-address-of-api:port
-   ```
+  ```env
+  API=http://ip-address-of-api:port
+  ```
 
 ## Contributing
 
@@ -224,4 +263,4 @@ This project is licensed under the MIT License.
 
 ## Contact
 
-For any questions or inquiries, please contact.
+This project is a part of the GenAI project. In case there are any questions, please contact
