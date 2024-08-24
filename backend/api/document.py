@@ -7,8 +7,10 @@ from sqlalchemy.orm import Session
 
 from backend.db.sessions import get_db
 from backend.exceptions import NoDocumentsFoundException
+from backend.models.sqlalchemy_models import User
 from backend.service.document_service import document_list
 from backend.service.document_service import save_document
+from backend.service.oauth import get_current_user
 
 # from fastapi.responses import JSONResponse
 # from typing import List
@@ -25,9 +27,11 @@ document_router = APIRouter(
 )
 
 
-@document_router.post("/upload")
+@document_router.post("/upload", dependencies=[Depends(get_current_user)])
 async def upload_file(
-    file: UploadFile = File(...), db: Session = Depends(get_db)
+    current_user: User = Depends(get_current_user),
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
 ):
     """
     This endpoint allows you to upload a single file.
@@ -36,6 +40,7 @@ async def upload_file(
     """
     try:
         return save_document(file=file, db=db)
+
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -44,8 +49,11 @@ async def upload_file(
         )
 
 
-@document_router.get("/")
-def list_documents(db: Session = Depends(get_db)):
+@document_router.get("/", dependencies=[Depends(get_current_user)])
+def list_documents(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
     """List all the documents which exist in db"""
     try:
         return document_list(db)

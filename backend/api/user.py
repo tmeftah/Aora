@@ -34,15 +34,14 @@ async def read_users_me(current_user: User = Depends(get_current_user)):
     return fetch_user(current_user)
 
 
-@user_router.get("/")
+@user_router.get("/", dependencies=[Depends(get_current_user)])
 async def get_users(
-    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Get all valid users"""
 
     try:
-        return get_all_user(current_user, db)
+        return get_all_user(db=db)
     except NoValidPermissionsException as e:
         raise HTTPException(status_code=403, detail=str(e))
     except Exception as e:
@@ -53,15 +52,14 @@ async def get_users(
         )
 
 
-@user_router.get("/{user_id}")
+@user_router.get("/{user_id}", dependencies=[Depends(get_current_user)])
 async def read_user(
     user_id: int,
-    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     try:
 
-        return get_user_details(current_user, db, user_id)
+        return get_user_details(db=db, user_id=user_id)
 
     except UserNotFoundException as e:
         raise HTTPException(status_code=404, detail=str(e)) from e
@@ -74,20 +72,21 @@ async def read_user(
         ) from e
 
 
-@user_router.post("/")
+@user_router.post("/", dependencies=[Depends(get_current_user)])
 async def create_user(
     username: str,
     password: str,
     role: int,
-    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Create a new user"""
     try:
-        return created_user(current_user, db, username, password, role)
-
-    except NoValidPermissionsException as e:
-        raise HTTPException(status_code=403, detail=str(e))
+        return created_user(
+            db=db,
+            username=username,
+            password=password,
+            role=role,
+        )
 
     except DuplicateUserException as e:
         raise HTTPException(status_code=403, detail=str(e))
@@ -101,27 +100,22 @@ async def create_user(
         )
 
 
-@user_router.put("/{user_id}")
+@user_router.put("/{user_id}", dependencies=[Depends(get_current_user)])
 async def update_user(
     user_id: int,
     username: str,
     password: str,
     role: int,
-    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     try:
         return update_user_details(
-            current_user=current_user,
             db=db,
             user_id=user_id,
             username=username,
             password=password,
             role=role,
         )
-
-    except NoValidPermissionsException as e:
-        raise HTTPException(status_code=403, detail=str(e))
 
     except UserNotFoundException as e:
         raise HTTPException(status_code=404, detail=str(e))
@@ -135,20 +129,14 @@ async def update_user(
         )
 
 
-@user_router.delete("/{user_id}")
+@user_router.delete("/{user_id}", dependencies=[Depends(get_current_user)])
 async def delete_user(
     user_id: int,
-    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Delete a specific user"""
     try:
-        return delete_user_details(
-            user_id=user_id, current_user=current_user, db=db
-        )
-
-    except NoValidPermissionsException as e:
-        raise HTTPException(status_code=403, detail=str(e))
+        return delete_user_details(user_id=user_id, db=db)
 
     except UserNotFoundException as e:
         raise HTTPException(status_code=404, detail=str(e))

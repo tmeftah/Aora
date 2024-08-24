@@ -1,9 +1,10 @@
 import json
 import uuid
+
 from fastapi.responses import StreamingResponse
 
-from backend.rag_llms_langchain import chain
 from backend.embeddings.ingest import get_vectorstore
+from backend.rag_llms_langchain import chain
 
 
 async def query_service(query: str):
@@ -23,5 +24,6 @@ async def query_service(query: str):
 
         # TODO  here we have to add the metadata/source
 
-    return StreamingResponse(stream_generator(),
-                             media_type="application/x-ndjson")
+    return StreamingResponse(
+        stream_generator(), media_type="application/x-ndjson"
+    )
