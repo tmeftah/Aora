@@ -1,19 +1,27 @@
 import json
+
 import uuid
 
 from fastapi.responses import StreamingResponse
 
 from backend.embeddings.ingest import get_vectorstore
+
+from backend.exceptions import ModelsNotRetrievedException
+from backend.service.llm_utils import create_chain, get_list_available_models
+
+
 from backend.rag_llms_langchain import chain
 
 
-async def query_service(query: str):
+
+async def query_service(query: str, model_name: str):
     """
     Process a query and return a streaming response.
     """
 
     store = get_vectorstore()
     docs = store.invoke(query)
+    chain = create_chain(model_name)
 
     print(20 * "*", "docs", 20 * "*", "\n", docs)
 
@@ -27,3 +35,15 @@ async def query_service(query: str):
     return StreamingResponse(
         stream_generator(), media_type="application/x-ndjson"
     )
+
+
+
+async def model_list() -> list:
+    """List all downloaded ollama models"""
+
+    try:
+        return  get_list_available_models()
+        
+    except Exception as e:         
+        raise ModelsNotRetrievedException()
+
