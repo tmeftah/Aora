@@ -1,6 +1,11 @@
+import os
+import json
 from langchain_community.chat_models import ChatOllama
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
+import ollama
+
+from backend.exceptions import ModelsNotRetrievedException
 
 TEMPLATE = """<|begin_of_text|><|start_header_id|>system<|end_header_id|>
 You are an AI assistant, you only answer questions on the folwing
@@ -11,15 +16,32 @@ Context: {context}
 <|eot_id|><|start_header_id|>assistant<|end_header_id|>"""
 
 
-def get_chat_model(model_name: str):
+def get_list_available_models():
+  
+    """List all downloaded ollama models"""
+
+    try:
+        client =  ollama.Client(host=os.getenv("OLLAMA_API_URL"))
+        
+      
+        return  [model['name'] for model in client.list()['models']]
+        
+    except Exception as e:         
+        raise ModelsNotRetrievedException()
+
+
+def get_chat_model(model_name: str="llama3"):
     """
     Return an instance of ChatOllama based on the given model_name.
     """
-    if model_name == "llama3":
-        return ChatOllama(model="llama3", temperature=0.5)
-    elif model_name == "other_model":
-        return ChatOllama(model="other_model", temperature=0.7)
-    else:
+   
+    try:
+        if model_name in  get_list_available_models():
+            return ChatOllama(model=model_name, temperature=0.7)
+        raise ValueError(f"Unsupported model name: {model_name}")
+    
+    #TODO Better Exception
+    except Exception as e:
         raise ValueError(f"Unsupported model name: {model_name}")
 
 

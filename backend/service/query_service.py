@@ -1,13 +1,13 @@
 import json
-import os
+
 import uuid
 
-import httpx
 from fastapi.responses import StreamingResponse
 
 from backend.embeddings.ingest import get_vectorstore
 from backend.exceptions import ModelsNotRetrievedException
-from backend.service.llm_utils import create_chain
+from backend.service.llm_utils import create_chain, get_list_available_models
+
 
 
 async def query_service(query: str, model_name: str):
@@ -33,12 +33,11 @@ async def query_service(query: str, model_name: str):
     )
 
 
-async def model_list():
+async def model_list() -> list:
     """List all downloaded ollama models"""
 
-    async with httpx.AsyncClient() as client:
-        response = await client.get(os.getenv("OLLAMA_API_URL"))
-        if response.status_code == 200:
-            return response.json()
-        else:
-            raise ModelsNotRetrievedException()
+    try:
+        return  get_list_available_models()
+        
+    except Exception as e:         
+        raise ModelsNotRetrievedException()
