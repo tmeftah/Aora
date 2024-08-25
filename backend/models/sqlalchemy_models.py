@@ -1,6 +1,9 @@
+
 from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import String
+from sqlalchemy import DateTime
+import datetime
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -28,3 +31,6 @@ class Documents(Base):
     filename = Column(String, unique=True, index=True)
     filehash = Column(String, unique=True)
     content_type = Column(String)
+    status = Column(String)
+    created_at = Column(DateTime, default= datetime.datetime.now())
+    updated_at = Column(DateTime, default= datetime.datetime.now())
