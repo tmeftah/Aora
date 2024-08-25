@@ -9,10 +9,29 @@
           </p>
         </div>
         <div class="col-grow q-gutter-sm">
-          <q-btn color="secondary" label="Upload" icon="upload" />
+          <q-btn color="secondary" label="Upload" icon="upload">
+            <q-popup-proxy v-model="show_uploader">
+              <q-banner>
+                <q-uploader
+                  :factory="upload_documents"
+                  flat
+                  color="secondary"
+                  style="max-width: 300px"
+                  fieldName="file"
+                  @uploaded="uploaded_success"
+                  @failed="upload_failed"
+              /></q-banner>
+            </q-popup-proxy>
+          </q-btn>
         </div>
       </div>
-      <q-table :rows="rows" :columns="columns" row-key="name" flat bordered>
+      <q-table
+        :rows="documents"
+        :columns="columns"
+        row-key="name"
+        flat
+        bordered
+      >
         <template v-slot:top-right>
           <q-input
             dense
@@ -41,25 +60,39 @@
 </template>
 
 <script setup>
+import { storeToRefs } from "pinia";
+import { date } from "quasar";
+import { useMainStore } from "../stores/main-store";
+
 defineOptions({
-  name: "IndexPage",
+  name: "DocumentsPage",
 });
+
+const MainStore = useMainStore();
+const {
+  get_documents_list,
+  upload_documents,
+  uploaded_success,
+  upload_failed,
+} = MainStore;
+const { documents, show_uploader } = storeToRefs(MainStore);
 
 const columns = [
   {
-    name: "name",
+    name: "filename",
     required: true,
     label: "Name",
     align: "left",
-    field: (row) => row.name,
+    field: (row) => row.filename,
     format: (val) => `${val}`,
     sortable: true,
   },
   {
-    name: "date",
+    name: "created_at",
     align: "center",
     label: "Date",
-    field: "date",
+    field: "created_at",
+    format: (val) => `${date.formatDate(val, "YYYY-MM-DD HH:mm:ss")}`,
     sortable: true,
   },
   {
@@ -70,19 +103,5 @@ const columns = [
     sortable: true,
   },
 ];
-
-const rows = [
-  {
-    name: "Document 01",
-    date: "12/05/2024",
-    status: "done",
-    status_text: "green",
-  },
-  {
-    name: "Document 02",
-    date: "01/08/2024",
-    status: "on progress",
-    status_text: "purple",
-  },
-];
+get_documents_list();
 </script>
