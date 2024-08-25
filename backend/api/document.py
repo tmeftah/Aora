@@ -59,7 +59,7 @@ def list_documents(
         return document_list(db)
 
     except NoDocumentsFoundException as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        return []
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
