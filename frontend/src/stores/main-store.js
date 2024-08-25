@@ -29,6 +29,12 @@ export const useMainStore = defineStore("main", {
           },
         });
 
+        if (response.status === 401) {
+          authStore.clearToken();
+          window.location.href = "/login"; // Or use Vue Router
+          return;
+        }
+
         if (!response.ok) {
           // Extract error message if available
           const errorData = await response.json().catch(() => ({})); // Parsing might fail, default to empty object
@@ -115,6 +121,14 @@ export const useMainStore = defineStore("main", {
           readChunk(reader, this.solution);
         })
         .catch((error) => {
+          //
+          if (error.status === 401) {
+            authStore.clearToken();
+            window.location.href = "/login"; // Or use Vue Router
+            return;
+          }
+
+          //
           this.loading = false;
           console.error("Error fetching the data:", error);
         });
@@ -131,6 +145,12 @@ export const useMainStore = defineStore("main", {
             Authorization: `Bearer ${authStore.token}`,
           },
         });
+
+        if (response.status === 401) {
+          authStore.clearToken();
+          window.location.href = "/login"; // Or use Vue Router
+          return;
+        }
 
         if (!response.ok) {
           // Extract error message if available
@@ -180,7 +200,10 @@ export const useMainStore = defineStore("main", {
             url: `${baseUrl}/documents/upload`,
             method: "POST",
             headers: [
-              { name: "Authorization", value: `Bearer ${authStore.token}` },
+              {
+                name: "Authorization",
+                value: `Bearer ${authStore.token}`,
+              },
             ],
           });
         }, 2000);
@@ -203,6 +226,7 @@ export const useMainStore = defineStore("main", {
     },
 
     async upload_failed() {
+      // FIXME: chech if token is not valid anymore
       Notify.create({
         color: "negative",
         position: "bottom",
