@@ -15,26 +15,18 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.embeddings import OllamaEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
-import chromadb
-
 
 from dotenv import load_dotenv
 
+
 load_dotenv()
-directory = './docs'
 
-# Get the path value from .env file
-relative_path = os.getenv("DATABASE_PATH").replace(".","")
-# Get directory of script
-script_dir = os.path.dirname(os.path.abspath(__file__))
-# Append the relative path to the script directory
-persist_directory = os.path.join(script_dir, ("."+relative_path))
 
-print(persist_directory)
-
+vectordatastore_directory = os.getenv("VECTORSTORE_DATABASE_PATH")
+documenst_directory = os.getenv("DOCUMENTS_DIRECTORY")
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///aora.db")
-engine = create_engine(DATABASE_URL)
+engine = create_engine("sqlite:///"+DATABASE_URL)
 Base = declarative_base()
 
 
@@ -50,7 +42,7 @@ def check_file_in_db(filename):
 
 def update_file_status(filename):
     file = check_file_in_db(filename)
-    file_hash = hashlib.sha256(open(os.path.join(directory, filename), "rb").read()).hexdigest()
+    # file_hash = hashlib.sha256(open(os.path.join(documenst_directory, filename), "rb").read()).hexdigest()
 
     if file and file.status != "done":
       
@@ -65,6 +57,7 @@ def update_file_status(filename):
     
 
 def create_vectorstore(filename):
+
     text_splitter = RecursiveCharacterTextSplitter(
         # Set a really small chunk size, just to show.
         chunk_size=1300,
@@ -73,7 +66,7 @@ def create_vectorstore(filename):
     )
 
  
-    loader = PyPDFLoader(os.path.join(directory, filename))
+    loader = PyPDFLoader(os.path.join(documenst_directory, filename))
     doc = loader.load()
     document_split = text_splitter.split_documents(doc)
 
@@ -81,7 +74,7 @@ def create_vectorstore(filename):
         collection_name=os.environ.get("COLLECTION_NAME"),
         documents=document_split,
         embedding=OllamaEmbeddings(model="mxbai-embed-large"),
-        persist_directory=persist_directory,
+        persist_directory=vectordatastore_directory,
         collection_metadata={"hnsw:space": "cosine"}
     )
 
@@ -109,7 +102,7 @@ def monitor_directory(directory):
 
 def main():
     
-    monitor_directory(directory)
+    monitor_directory(documenst_directory)
 
 if __name__ == '__main__':
     main()
