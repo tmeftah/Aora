@@ -21,13 +21,14 @@ relative_path = os.getenv("DATABASE_PATH")
 script_dir = os.path.dirname(os.path.abspath(__file__))
 # Append the relative path to the script directory
 persist_directory = os.path.join(script_dir, relative_path)
+#print(persist_directory)
 
 
 def create_vectorstore():
     text_splitter = RecursiveCharacterTextSplitter(
         # Set a really small chunk size, just to show.
-        chunk_size=1300,
-        chunk_overlap=110,
+        chunk_size=1500,
+        chunk_overlap=120,
         length_function=len,
     )
 
@@ -57,12 +58,12 @@ def get_vectorstore():
         client=persistent_client,
         collection_name=os.environ.get("COLLECTION_NAME"),
         embedding_function=OllamaEmbeddings(model="mxbai-embed-large"),
+        collection_metadata={"hnsw:space": "cosine"}
     )
     print("There are", langchain_chroma._collection.count(), "in the collection")
 
     # print("There are", langchain_chroma.similarity_search("bmw?"))
-    return langchain_chroma.as_retriever(
-        search_type="mmr", search_kwargs={"k": 3, "lambda_mult": 0.25}
+    return langchain_chroma.as_retriever(search_type="similarity_score_threshold", search_kwargs={"score_threshold": 0.2,"k":3}
     )
 
 

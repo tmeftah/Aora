@@ -7,7 +7,7 @@ import ollama
 
 from backend.exceptions import ModelsNotRetrievedException
 
-TEMPLATE = """You are an AI assistant and based on the context provided below, please provide a brief answer starting with 'Based on the given context'. Do not use external knowledge or make assumptions beyond the context
+TEMPLATE = """You are an AI assistant and based on the context provided below, please provide an answer starting with 'Based on the given context'. Do not use external knowledge or make assumptions beyond the context
 context and nothing else. If you do not know the answer please strictly say "I couldn't find the answer to that question. Please contact our support team for more assistance."
 Question: {input}
 Context: {context}
