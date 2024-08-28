@@ -18,6 +18,7 @@
                   color="secondary"
                   style="max-width: 300px"
                   fieldName="file"
+                  accept="application/pdf, text/plain, .md"
                   @uploaded="uploaded_success"
                   @failed="upload_failed"
               /></q-banner>
