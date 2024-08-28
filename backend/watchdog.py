@@ -25,7 +25,7 @@ load_dotenv()
 vectordatastore_directory = os.getenv("VECTORSTORE_DATABASE_PATH")
 documenst_directory = os.getenv("DOCUMENTS_DIRECTORY")
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///aora.db")
+DATABASE_URL = os.getenv("DATABASE_URL", "aora.db")
 engine = create_engine("sqlite:///"+DATABASE_URL)
 Base = declarative_base()
 
