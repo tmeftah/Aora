@@ -17,6 +17,11 @@ export const useAuthStore = defineStore("auth", {
   },
 
   actions: {
+    clearToken() {
+      this.token = null;
+      localStorage.removeItem("token"); // Remove token from storage
+    },
+
     async login(email, password) {
       const formData = new URLSearchParams();
       formData.append("grant_type", "password");

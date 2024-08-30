@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col col-sm-6">
         <q-input
-          @keydown.enter.prevent="MainStore.sendQA(question)"
+          @keydown.enter.prevent="MainStore.sendQA(question, model_name)"
           outlined
           v-model="question"
           placeholder="ask a question..."
@@ -14,7 +14,7 @@
             <q-icon
               name="search"
               class="q-mr-sm"
-              @click="MainStore.sendQA(question)"
+              @click="MainStore.sendQA(question, model_name)"
             />
           </template>
         </q-input>
@@ -57,5 +57,5 @@ defineOptions({
 });
 
 const MainStore = useMainStore();
-const { loading, solution, question } = storeToRefs(MainStore);
+const { loading, solution, question, model_name } = storeToRefs(MainStore);
 </script>

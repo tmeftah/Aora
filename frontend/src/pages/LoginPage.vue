@@ -112,11 +112,14 @@
 import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../stores/auth";
+import { useMainStore } from "src/stores/main-store";
 
 const isPwd = ref(true);
 
 const authStore = useAuthStore();
 const router = useRouter();
+
+const mainStore = useMainStore();
 
 const user = reactive({
   email: null,
@@ -133,6 +136,7 @@ async function submit() {
         authStore.getCurrentUser().then(() => {
           if (authStore.user) {
             router.push("/");
+            mainStore.get_models();
           }
         });
       })

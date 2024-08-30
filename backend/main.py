@@ -14,6 +14,10 @@ from backend.db.sessions import create_tables
 from backend.db.sessions import get_db
 from backend.db.utils import populate_admin_user
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

@@ -23,6 +23,21 @@
           v-bind="link"
         />
       </q-list>
+
+      <q-separator />
+      <div class="q-ma-sm fixed-bottom">
+        <q-select
+          transition-show="flip-up"
+          transition-hide="flip-down"
+          dense
+          options-dense
+          outlined
+          v-model="model_name"
+          :options="models"
+          label="Model"
+          @update:model-value="(val) => mainStore.set_model_name(val)"
+        />
+      </div>
     </q-drawer>
 
     <q-page-container>
@@ -33,7 +48,9 @@
 
 <script setup>
 import { ref } from "vue";
+import { storeToRefs } from "pinia";
 import { useAuthStore } from "../stores/auth";
+import { useMainStore } from "src/stores/main-store";
 import { useRouter } from "vue-router";
 
 import EssentialLink from "components/EssentialLink.vue";
@@ -67,6 +84,9 @@ const leftDrawerOpen = ref(false);
 const miniState = ref(true);
 const authStore = useAuthStore();
 const router = useRouter();
+
+const mainStore = useMainStore();
+const { model_name, models } = storeToRefs(mainStore);
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;

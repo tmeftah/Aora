@@ -7,13 +7,11 @@ import ollama
 
 from backend.exceptions import ModelsNotRetrievedException
 
-TEMPLATE = """<|begin_of_text|><|start_header_id|>system<|end_header_id|>
-You are an AI assistant, you only answer questions on the folwing
-context and nothing else. If you do not know the answer please strictly say
-'see Documentation'<|eot_id|><|start_header_id|>user<|end_header_id|>
+TEMPLATE = """You are an AI assistant and based on the context provided below, please provide an answer starting with 'Based on the given context'. Do not use external knowledge or make assumptions beyond the context
+context and nothing else. If you do not know the answer please strictly say "I couldn't find the answer to that question. Please contact our support team for more assistance."
 Question: {input}
 Context: {context}
-<|eot_id|><|start_header_id|>assistant<|end_header_id|>"""
+"""
 
 
 def get_list_available_models():

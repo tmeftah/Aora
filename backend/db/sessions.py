@@ -5,8 +5,8 @@ from sqlalchemy.orm import sessionmaker
 
 from backend.models.sqlalchemy_models import Base
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///aora.db")
-engine = create_engine(DATABASE_URL)
+DATABASE_URL = os.getenv("DATABASE_URL", "aora.db")
+engine = create_engine("sqlite:///"+DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
