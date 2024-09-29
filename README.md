@@ -4,6 +4,8 @@
 
 Aora is an application designed to leverage AI for advanced document handling and natural language processing. This repository contains both backend and frontend components to get the application up and running.
 
+![Aora LogIn](./images/aora_login.PNG)
+
 ## 📟 Recommended Setup
 
 Highly recommended:
