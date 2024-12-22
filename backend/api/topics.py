@@ -8,7 +8,7 @@ from backend.service.oauth import get_current_user
 from backend.service.topics_service import get_all_topics
 
 
-user_router = APIRouter(
+topic_router = APIRouter(
     prefix="/topics",
     tags=["Topics"],
     responses={
@@ -19,7 +19,7 @@ user_router = APIRouter(
 )
 
 
-@user_router.get("/", dependencies=[Depends(get_current_user)])
+@topic_router.get("/", dependencies=[Depends(get_current_user)])
 async def get_topics(
     db: Session = Depends(get_db),
 ):
