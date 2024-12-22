@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from backend.db.sessions import get_db
 from backend.service.oauth import get_current_user
 from backend.service.topics_service import get_all_topics
-from backend.service.topics_service import create_topic
+from backend.service.topics_service import created_topic
 from backend.exceptions import DuplicateUserException
 
 
@@ -43,7 +43,7 @@ async def create_topics(
 ):
     """Create a new topic"""
     try:
-        return create_topic(
+        return created_topic(
             db=db,
             name=name,
         )

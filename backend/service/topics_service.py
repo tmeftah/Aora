@@ -12,7 +12,7 @@ def get_all_topics(db: Session) -> List[TopicPydantic]:
 
     return [TopicPydantic(name=topic.name) for topic in db.query(Topic).all()]
 
-def get_topic_by_name(name: str, db: Session) -> User | None:
+def get_topic_by_name(name: str, db: Session) -> Topic | None:
     """Get user by name"""
 
     topic = db.query(Topic).filter(Topic.name == name).first()
