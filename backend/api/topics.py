@@ -7,7 +7,9 @@ from backend.db.sessions import get_db
 from backend.service.oauth import get_current_user
 from backend.service.topics_service import get_all_topics
 from backend.service.topics_service import created_topic
+from backend.service.topics_service import update_topic
 from backend.exceptions import DuplicateUserException
+from backend.exceptions import NoTopicFoundException
 
 
 topic_router = APIRouter(
@@ -36,6 +38,7 @@ async def get_topics(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+
 @topic_router.post("/", dependencies=[Depends(get_current_user)])
 async def create_topics(
     name: str,
@@ -49,6 +52,32 @@ async def create_topics(
         )
 
     except DuplicateUserException as e:
+        raise HTTPException(status_code=403, detail=str(e))
+
+    except Exception as e:
+        print(e)
+        raise HTTPException(
+            status_code=500,
+            detail="Internal Server error",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
+@topic_router.put("/", dependencies=[Depends(get_current_user)])
+async def create_topics(
+    old_name: str,
+    name: str,
+    db: Session = Depends(get_db),
+):
+    """Create a new topic"""
+    try:
+        return update_topic(
+            db=db,
+            old_name=old_name,
+            name=name,
+        )
+
+    except NoTopicFoundException as e:
         raise HTTPException(status_code=403, detail=str(e))
 
     except Exception as e:

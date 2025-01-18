@@ -32,3 +32,8 @@ class ModelsNotRetrievedException(Exception):
     def __init__(self):
         self.message = "No Ollama Models found"
         super().__init__(self.message)
+
+class NoTopicFoundException(Exception):
+    def __init__(self):
+        self.message = "No Topic found"
+        super().__init__(self.message)
