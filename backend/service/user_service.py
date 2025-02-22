@@ -38,14 +38,14 @@ def get_user_details(db: Session, user_id: int) -> UserPydantic:
     )
 
 
-def get_user_by_name(name: str, db: Session) -> User | None:
+def get_user_by_name(name: str, db: Session) -> User:
     """Get user by name"""
 
     user = db.query(User).filter(User.username == name).first()
     return user if user else None
 
 
-def get_user_by_id(user_id: str, db: Session) -> User | None:
+def get_user_by_id(user_id: str, db: Session) -> User:
     """Get user by id"""
 
     user = db.query(User).filter(User.id == user_id).first()
