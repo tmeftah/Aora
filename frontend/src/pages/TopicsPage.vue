@@ -1,7 +1,6 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { date } from "quasar";
-import { useMainStore } from "../stores/main-store";
 import { useTopicStore } from "../stores/topicsStore";
 
 defineOptions({
