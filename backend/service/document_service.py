@@ -9,7 +9,7 @@ from backend.exceptions import NoDocumentsFoundException
 from backend.models.pydantic_models import DocumentPydantic
 from backend.models.sqlalchemy_models import Documents
 
-documenst_directory = os.getenv("DOCUMENTS_DIRECTORY")
+documenst_directory = os.getenv("DOCUMENTS_DIRECTORY", "documents/")
 
 
 def save_document(file: File, db: Session) -> DocumentPydantic:
@@ -17,10 +17,10 @@ def save_document(file: File, db: Session) -> DocumentPydantic:
     in the docs folder and creates a hash of the document
     and saves it in db"""
 
-    #file_directory = "docs"
+    # file_directory = "docs"
     os.makedirs(documenst_directory, exist_ok=True)
 
-    file_location = os.path.join(documenst_directory, file.filename) 
+    file_location = os.path.join(documenst_directory, file.filename)
     with open(file_location, "wb+") as file_object:
         file_object.write(file.file.read())
 
