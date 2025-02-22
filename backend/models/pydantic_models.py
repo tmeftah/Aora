@@ -24,6 +24,10 @@ class DocumentPydantic(BaseModel):
     content_type: str
     status:str
     created_at:datetime
+
+class TopicPydantic(BaseModel):
+    name: str
+
     
   
 
