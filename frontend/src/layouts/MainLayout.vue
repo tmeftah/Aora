@@ -4,10 +4,7 @@
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title
-          class="text-bold text-weight-bolder text-h3"
-          style="color: #507295"
-        >
+        <q-toolbar-title class="text-bold text-weight-bolder text-h3" style="color: #507295">
           Aora.
         </q-toolbar-title>
         <!-- Orion Inova -->
@@ -17,26 +14,14 @@
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered :width="220">
       <q-list>
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
+        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>
 
       <q-separator />
       <div class="q-ma-sm fixed-bottom">
-        <q-select
-          transition-show="flip-up"
-          transition-hide="flip-down"
-          dense
-          options-dense
-          outlined
-          v-model="model_name"
-          :options="models"
-          label="Model"
-          @update:model-value="(val) => mainStore.set_model_name(val)"
-        />
+        <q-select transition-show="flip-up" transition-hide="flip-down" dense options-dense outlined
+          v-model="model_name" :options="models" label="Model"
+          @update:model-value="(val) => mainStore.set_model_name(val)" />
       </div>
     </q-drawer>
 
@@ -77,6 +62,12 @@ const linksList = [
     caption: "chat with docs",
     icon: "folder_open",
     link: "documents",
+  },
+  {
+    title: "Alle Topics",
+    caption: "All topics",
+    icon: "library_books",
+    link: "topics",
   },
 ];
 
