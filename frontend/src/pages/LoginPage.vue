@@ -94,12 +94,12 @@ async function submit() {
               </div>
             </q-form>
           </q-card-section>
-          
+
           <q-card-section>
-            <div>
+            <!-- <div>
               <q-btn class="full-width" color="light-blue-13" label="Login with sso" rounded outline type="submit" />
-            </div>
-            <div class="q-mt-lg">
+            </div> -->
+            <div class="q-mt-sm">
               <div class="q-mt-sm">
                 <span> Don't have an account yet? </span>
                 <router-link class="text-primary" to="/register">
