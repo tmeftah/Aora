@@ -25,15 +25,6 @@ const columns = [
     label: "Topic-Name",
     align: "left",
     field: (row) => row.name,
-    format: (val) => `${val}`,
-    sortable: true,
-  },
-  {
-    name: "created_at",
-    align: "center",
-    label: "Date",
-    field: "created_at",
-    format: (val) => `${date.formatDate(val, "YYYY-MM-DD HH:mm:ss")}`,
     sortable: true,
   },
   {
