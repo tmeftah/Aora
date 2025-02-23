@@ -71,13 +71,13 @@ async function submit() {
             </div>
 
             <q-form ref="form" class="q-gutter-md" @submit="submit">
-              <q-input dense v-model="user.email" label="Email" name="Email" :rules="[
+              <q-input outlined v-model="user.email" label="Email" name="Email" :rules="[
                 (val) => !!val || 'Email required!',
                 // (val, rules) =>
                 //   rules.email(val) || 'Please enter a valid email address',
               ]" />
 
-              <q-input dense v-model="user.password" :type="isPwd ? 'password' : 'text'" label="Password"
+              <q-input outlined v-model="user.password" :type="isPwd ? 'password' : 'text'" label="Password"
                 name="password" :rules="[
                   (val) => !!val || 'Please enter a password',
                   (val) =>
@@ -94,9 +94,7 @@ async function submit() {
               </div>
             </q-form>
           </q-card-section>
-
-          <q-separator />
-
+          
           <q-card-section>
             <div>
               <q-btn class="full-width" color="light-blue-13" label="Login with sso" rounded outline type="submit" />
