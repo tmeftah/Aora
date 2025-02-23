@@ -75,13 +75,16 @@ const saveTopic = async () => {
 
     <q-dialog v-model="showDialog">
       <q-card style="min-width: 400px">
-        <q-card-section>
+        <q-card-section class="bg-teal text-white">
           <div class="text-h6">Add New Topic</div>
+        </q-card-section>
+        <q-card-section>
           <q-form class="q-gutter-md">
             <q-input v-model="newTopicName" label="Topic Name" outlined required />
             <q-input v-model="newTopicDetails" label="Topic Details" outlined type="textarea" />
           </q-form>
         </q-card-section>
+
         <q-card-actions align="right">
           <q-btn label="Cancel" color="red" @click="showDialog = false" />
           <q-btn label="Add Topic" color="green" @click="saveTopic" />
