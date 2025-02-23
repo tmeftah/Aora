@@ -1,10 +1,8 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { date } from "quasar";
-
 import { useTopicStore } from "../stores/topicsStore";
 import { ref, onMounted } from "vue";
-
 
 defineOptions({
   name: "TopicsPage",
@@ -14,7 +12,6 @@ const TopicStore = useTopicStore();
 const {
   getAllTopics,
   addTopic
-
 
 } = TopicStore;
 const { topics } = storeToRefs(TopicStore);
@@ -78,7 +75,6 @@ const saveTopic = async () => {
             All defined topics
           </p>
         </div>
-
       </div>
       <q-table :rows="topics" :columns="columns" row-key="name" flat bordered>
         <template v-slot:top-right>
@@ -105,27 +101,5 @@ const saveTopic = async () => {
         </q-card-actions>
       </q-card>
     </q-dialog>
-
-      </div>
-      <q-table :rows="topics" :columns="columns" row-key="name" flat bordered>
-        <template v-slot:top-right>
-          <q-input dense debounce="300" placeholder="Filter by topic name" outlined>
-            <template v-slot:prepend>
-              <q-icon name="filter_list" class="q-mr-sm" />
-            </template>
-          </q-input>
-        </template>
-        <template v-slot:body-cell-status="props">
-          <q-td :props="props">
-            <div>
-              <q-badge :color="props.row.status_text" :label="props.value" />
-            </div>
-            <div class="my-table-details">
-              {{ props.row.details }}
-            </div>
-          </q-td>
-        </template>
-      </q-table>
-    </div>
   </q-page>
 </template>
