@@ -68,22 +68,18 @@ const saveTopic = async () => {
 <template>
   <q-page>
     <div class="q-pa-md">
+
       <div class="row q-mb-xl">
         <div class="col">
           <span class="text-h4">Topics</span>
-          <p class="q-mt-sm text-caption text-weight-light">
-            All defined topics
-          </p>
         </div>
       </div>
-      <q-table :rows="topics" :columns="columns" row-key="name" flat bordered>
-        <template v-slot:top-right>
-          <div class="row items-center no-wrap">
-            <q-btn label="+Topics" color="primary" class="q-ml-sm" @click="showDialog = true" />
-          </div>
-        </template>
 
-      </q-table>
+      <div class="row no-wrap">
+        <q-btn label="+Topics" color="primary" class="q-mb-sm " @click="showDialog = true" />
+      </div>
+      <q-table :rows="topics" :columns="columns" row-key="name" flat bordered />
+
     </div>
 
     <q-dialog v-model="showDialog">
