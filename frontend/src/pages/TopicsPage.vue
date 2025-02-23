@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import { date } from "quasar";
 import { useTopicStore } from "../stores/topicsStore";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 defineOptions({
   name: "TopicsPage",
@@ -45,7 +45,10 @@ const columns = [
   },
 ];
 
-getAllTopics();
+onMounted(() => {
+  console.log("TopicsPage component mounted");
+  getAllTopics();
+});
 
 const showDialog = ref(false);
 const newTopicName = ref("");
