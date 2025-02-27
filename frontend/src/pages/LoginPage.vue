@@ -34,7 +34,6 @@ async function submitLoginForm() {
 
     if (authStore.user) {
       router.push("/");
-      await mainStore.get_models();
     }
   } catch (error) {
     console.error("Login failed:", error);
