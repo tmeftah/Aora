@@ -73,7 +73,7 @@ const saveTopic = async () => {
 <template>
   <q-page class="full-page">
     <q-card flat bordered class="full-card">
-      <q-card-section class="bg-primary text-white">
+      <q-card-section class="text-black">
         <div class="text-h4 text-bold">📚 Topics Management</div>
       </q-card-section>
 
