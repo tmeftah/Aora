@@ -3,6 +3,7 @@ import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../stores/auth";
 import { useMainStore } from "src/stores/main-store";
+import { getValidationRules } from "src/composables/useValidations";
 
 const isPwd = ref(true);
 
@@ -10,6 +11,8 @@ const authStore = useAuthStore();
 const router = useRouter();
 
 const mainStore = useMainStore();
+
+const { passwordValidationRules, emailValidationRules } = getValidationRules();
 
 const user = reactive({
   email: null,
@@ -71,18 +74,10 @@ async function submit() {
             </div>
 
             <q-form ref="form" class="q-gutter-md" @submit="submit">
-              <q-input outlined v-model="user.email" label="Email" name="Email" :rules="[
-                (val) => !!val || 'Email required!',
-                // (val, rules) =>
-                //   rules.email(val) || 'Please enter a valid email address',
-              ]" />
+              <q-input outlined v-model="user.email" label="Email" name="Email" :rules=emailValidationRules />
 
               <q-input outlined v-model="user.password" :type="isPwd ? 'password' : 'text'" label="Password"
-                name="password" :rules="[
-                  (val) => !!val || 'Please enter a password',
-                  (val) =>
-                    !(val.length <= 3) || 'Please type more than 8 characters',
-                ]">
+                name="password" :rules=passwordValidationRules>
                 <template v-slot:append>
                   <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
                     @click="isPwd = !isPwd" />
