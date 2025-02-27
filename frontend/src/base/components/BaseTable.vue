@@ -9,8 +9,6 @@ defineProps({
   },
 });
 
-const emit = defineEmits(["addItem"]);
-
 const filter = ref("");
 </script>
 
@@ -32,7 +30,6 @@ const filter = ref("");
       </q-card-section>
 
       <q-card-section class="table-container">
-        <!-- Slot for passing in the q-table -->
         <slot name="dataTable"></slot>
       </q-card-section>
     </q-card>
