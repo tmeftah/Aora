@@ -20,7 +20,7 @@ const filter = ref("");
       </q-card-section>
 
       <q-card-section class="toolbar">
-        <q-input filled v-model="filter" :label="filterPlaceholder" class="search-bar" debounce="300">
+        <q-input outlined v-model="filter" :label="filterPlaceholder" class="search-bar" debounce="300">
           <template v-slot:append>
             <q-icon name="search" />
           </template>
