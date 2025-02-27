@@ -23,63 +23,27 @@ export const useAuthStore = defineStore("auth", {
     },
 
     async login(email, password) {
-      const formData = new URLSearchParams();
-      formData.append("grant_type", "password");
-      formData.append("username", email);
-      formData.append("password", password);
+      /** Login functionality of AORA */
+
+      const formData = new URLSearchParams({
+        grant_type: "password",
+        username: email,
+        password: password,
+      });
 
       try {
-        const response = await fetch(`${baseUrl}/token`, {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: formData.toString(),
-        });
+        const data = await this.apiRequest("POST", "/token", formData);
 
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          const errorMessage =
-            errorData.detail || `Error: ${response.statusText}`;
-
-          throw new Error(errorMessage);
-        }
-
-        const data = await response.json();
         this.token = data.access_token;
         localStorage.setItem("token", this.token);
-
-        Notify.create({
-          color: "positive",
-          position: "bottom",
-          message: "You are successfully logged in",
-          icon: "done",
-        });
+        this.showNotification(
+          "positive",
+          "You are successfully logged in",
+          "done"
+        );
       } catch (error) {
-        // Handle network errors and HTTP errors
-        if (error.name === "TypeError") {
-          // This typically indicates a network error
-          console.error("Network error: Could not reach the server");
-          Notify.create({
-            color: "negative",
-            position: "bottom",
-            message: error.message,
-            icon: "report_problem",
-          });
-        } else {
-          // HTTP error, or some other error
-          console.error(`API error: ${error.message}`);
-          Notify.create({
-            color: "negative",
-            position: "bottom",
-            message: error.message,
-            icon: "report_problem",
-          });
-        }
-
-        // You can rethrow the error or handle it in some way, e.g., user notification
-        throw error; // Optionally rethrow if you want to propagate the error
+        this.showNotification("negative", error.message, "report_problem");
+        throw error;
       }
     },
 
@@ -168,6 +132,39 @@ export const useAuthStore = defineStore("auth", {
 
     stopRefreshTokenTimer() {
       clearTimeout(this.refreshTokenTimeout);
+    },
+
+    async apiRequest(method, endpoint, body = null) {
+      const headers = {
+        Accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+      };
+
+      if (this.token) {
+        headers.Authorization = `Bearer ${this.token}`;
+      }
+
+      const response = await fetch(`${baseUrl}${endpoint}`, {
+        method,
+        headers,
+        body: body ? body.toString() : null,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || `Error: ${response.statusText}`);
+      }
+
+      return response.json();
+    },
+
+    showNotification(color, message, icon) {
+      Notify.create({
+        color,
+        position: "bottom",
+        message,
+        icon,
+      });
     },
   },
 });
