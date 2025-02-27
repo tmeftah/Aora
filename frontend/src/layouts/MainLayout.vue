@@ -28,13 +28,13 @@ const linksList = [
     title: "Alle Dokumente",
     caption: "chat with docs",
     icon: "folder_open",
-    link: "documents",
+    link: "/documents",
   },
   {
     title: "Alle Topics",
     caption: "All topics",
     icon: "library_books",
-    link: "topics",
+    link: "/topics",
   },
 ];
 
