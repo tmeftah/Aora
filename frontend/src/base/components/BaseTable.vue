@@ -28,8 +28,7 @@ const filter = ref("");
           </template>
         </q-input>
 
-        <slot name="addBtn"> </slot>
-        <!-- <q-btn v-if="showAddButton" label="Add New" color="primary" icon="add" size="md" @click="$emit('addItem')" /> -->
+        <slot name="customBtn"> </slot>
       </q-card-section>
 
       <q-card-section class="table-container">
@@ -42,7 +41,7 @@ const filter = ref("");
   </q-page>
 </template>
 
-<style>
+<style scoped>
 .full-page {
   width: 100%;
   height: 70vh;

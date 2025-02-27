@@ -69,9 +69,9 @@ const saveTopic = async () => {
 
 <template>
 
-  <BaseTable title="📚 Topics Management">
+  <BaseTable title="📚 Topics Management" filterPlaceholder="Search for Topics...">
 
-    <template v-slot:addBtn>
+    <template v-slot:customBtn>
       <q-btn label="Add New Topic" color="primary" icon="add" size="md" @click="showDialog = true" />
     </template>
 
