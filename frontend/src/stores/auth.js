@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
 import { Notify } from "quasar";
 
-const baseUrl = `${process.env.API}`;
+export const baseUrl = `${process.env.API}`;
 
 export const useAuthStore = defineStore("auth", {
+
   state: () => ({
     user: JSON.parse(localStorage.getItem("user")) || null,
     token: localStorage.getItem("token") || null,
@@ -19,7 +20,7 @@ export const useAuthStore = defineStore("auth", {
   actions: {
     clearToken() {
       this.token = null;
-      localStorage.removeItem("token"); // Remove token from storage
+      localStorage.removeItem("token");
     },
 
     async login(email, password) {
@@ -37,10 +38,8 @@ export const useAuthStore = defineStore("auth", {
           body: formData.toString(),
         });
 
-        // Check for HTTP errors
         if (!response.ok) {
-          // Extract error message if available
-          const errorData = await response.json().catch(() => ({})); // Parsing might fail, default to empty object
+          const errorData = await response.json().catch(() => ({}));
           const errorMessage =
             errorData.detail || `Error: ${response.statusText}`;
 
@@ -59,7 +58,6 @@ export const useAuthStore = defineStore("auth", {
           icon: "done",
         });
 
-        //
       } catch (error) {
         // Handle network errors and HTTP errors
         if (error.name === "TypeError") {

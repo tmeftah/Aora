@@ -1,10 +1,8 @@
 import { defineStore } from "pinia";
 import { Notify } from "quasar";
-import { useAuthStore } from "stores/auth";
+import { useAuthStore, baseUrl } from "stores/auth";
 
 const authStore = useAuthStore();
-
-const baseUrl = `${process.env.API}`;
 
 export const useTopicStore = defineStore("topics", {
   state: () => ({

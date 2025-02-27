@@ -1,10 +1,8 @@
 import { defineStore } from "pinia";
 import { Notify } from "quasar";
-import { useAuthStore } from "stores/auth";
+import { useAuthStore, baseUrl } from "stores/auth";
 
 const authStore = useAuthStore();
-
-const baseUrl = `${process.env.API}`;
 
 export const useDocumentStore = defineStore("documentStore", {
   state: () => ({
@@ -40,7 +38,6 @@ export const useDocumentStore = defineStore("documentStore", {
 
         const data = await response.json();
         this.documents = data;
-
       } catch (error) {
         if (error.name === "TypeError") {
           console.error("Network error: Could not reach the server");
