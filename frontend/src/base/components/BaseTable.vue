@@ -38,7 +38,7 @@ const filter = ref("");
   </q-page>
 </template>
 
-<style scoped>
+<style>
 .full-page {
   width: 100%;
   height: 70vh;
