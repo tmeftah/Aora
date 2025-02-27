@@ -92,11 +92,11 @@ const logoutDialog = ref(false);
       </q-list>
 
       <q-separator />
-      <div class="q-ma-sm fixed-bottom">
+      <!-- <div class="q-ma-sm fixed-bottom">
         <q-select transition-show="flip-up" transition-hide="flip-down" dense options-dense outlined
           v-model="model_name" :options="models" label="Model"
           @update:model-value="(val) => mainStore.set_model_name(val)" />
-      </div>
+      </div> -->
     </q-drawer>
 
     <q-page-container>
