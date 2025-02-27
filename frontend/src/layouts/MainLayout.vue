@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "../stores/auth";
-import { useMainStore } from "src/stores/main-store";
+import { useMainStore } from "src/stores/mainStore";
 import { useRouter } from "vue-router";
 import { Notify } from "quasar";
 import EssentialLink from "components/EssentialLink.vue";

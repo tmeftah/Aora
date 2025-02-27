@@ -32,7 +32,7 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { useMainStore } from "../stores/main-store";
+import { useMainStore } from "../stores/mainStore";
 
 defineOptions({
   name: "2Page",

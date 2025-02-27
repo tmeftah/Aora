@@ -2,7 +2,7 @@
 import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../stores/auth";
-import { useMainStore } from "src/stores/main-store";
+import { useMainStore } from "src/stores/mainStore";
 import { getValidationRules } from "src/composables/useValidations";
 
 const isPwd = ref(true);
