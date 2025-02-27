@@ -1,43 +1,10 @@
-<template>
-  <q-layout view="hHh lpR fFf">
-    <q-header dark bordered class="bg-white text-grey-8">
-      <q-toolbar>
-        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-
-        <q-toolbar-title class="text-bold text-weight-bolder text-h3" style="color: #507295">
-          Aora.
-        </q-toolbar-title>
-        <!-- Orion Inova -->
-        <q-btn flat round icon="logout" class="q-mr-xs" @click="logout" />
-      </q-toolbar>
-    </q-header>
-
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered :width="220">
-      <q-list>
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
-      </q-list>
-
-      <q-separator />
-      <div class="q-ma-sm fixed-bottom">
-        <q-select transition-show="flip-up" transition-hide="flip-down" dense options-dense outlined
-          v-model="model_name" :options="models" label="Model"
-          @update:model-value="(val) => mainStore.set_model_name(val)" />
-      </div>
-    </q-drawer>
-
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout>
-</template>
-
 <script setup>
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "../stores/auth";
-import { useMainStore } from "src/stores/main-store";
+import { useMainStore } from "src/stores/mainStore";
 import { useRouter } from "vue-router";
-
+import { Notify } from "quasar";
 import EssentialLink from "components/EssentialLink.vue";
 
 defineOptions({
@@ -61,13 +28,13 @@ const linksList = [
     title: "Alle Dokumente",
     caption: "chat with docs",
     icon: "folder_open",
-    link: "documents",
+    link: "/documents",
   },
   {
     title: "Alle Topics",
     caption: "All topics",
     icon: "library_books",
-    link: "topics",
+    link: "/topics",
   },
 ];
 
@@ -82,9 +49,78 @@ const { model_name, models } = storeToRefs(mainStore);
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
-function logout() {
-  authStore.logout();
 
-  router.push("/login");
-}
+
+const handleLogout = async () => {
+  try {
+    await authStore.logout();
+    router.push("/login");
+    Notify.create({
+      color: "positive",
+      position: "bottom",
+      message: "You are successfully logged out",
+      icon: "done",
+    });
+  } catch (error) {
+    console.error("Logout failed:", error);
+  } finally {
+    logoutDialog.value = false;
+  }
+};
+
+const logoutDialog = ref(false);
 </script>
+
+
+<template>
+  <q-layout view="hHh lpR fFf">
+    <q-header dark bordered class="bg-white text-grey-8">
+      <q-toolbar>
+        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+
+        <q-toolbar-title class="text-bold text-weight-bolder text-h3" style="color: #507295">
+          Aora.
+        </q-toolbar-title>
+        <!-- Orion Inova -->
+        <q-btn flat round icon="logout" class="q-mr-xs" @click="logoutDialog = true" />
+      </q-toolbar>
+    </q-header>
+
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered :width="220">
+      <q-list>
+        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
+      </q-list>
+
+      <q-separator />
+      <!-- <div class="q-ma-sm fixed-bottom">
+        <q-select transition-show="flip-up" transition-hide="flip-down" dense options-dense outlined
+          v-model="model_name" :options="models" label="Model"
+          @update:model-value="(val) => mainStore.set_model_name(val)" />
+      </div> -->
+    </q-drawer>
+
+    <q-page-container>
+      <router-view />
+    </q-page-container>
+
+    <!-- Logout Confirmation Dialog -->
+    <q-dialog :backdrop-filter="60" v-model="logoutDialog">
+      <q-card style="width: 700px; max-width: 80vw;">
+        <q-card-section class="row items-center q-pb-none text-h6">
+          <q-icon name="warning" color="warning" size="2rem" class="q-mr-sm" />
+          <span class="text-h6">Logout?</span>
+        </q-card-section>
+
+        <q-card-section>
+          Are you sure you want to Logout??
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn label="Cancel" color="grey" v-close-popup />
+          <q-btn label="Logout" color="red" @click="handleLogout" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+  </q-layout>
+</template>
