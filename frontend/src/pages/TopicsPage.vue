@@ -1,9 +1,10 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useTopicStore } from "../stores/topicsStore";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { Notify } from "quasar";
 import BaseTable from "src/base/components/BaseTable.vue"
+import BaseConfirmationDialog from "src/base/components/BaseConfirmationDialog.vue";
 
 defineOptions({
   name: "TopicsPage",
@@ -28,6 +29,13 @@ const columns = [
     label: "Details",
     field: (row) => row.details || "No details available",
     sortable: true,
+  },
+  {
+    name: "actions",
+    label: "Actions",
+    align: "left",
+    field: "actions",
+    sortable: false,
   },
 ];
 
@@ -64,6 +72,26 @@ const saveTopic = async () => {
   }
 };
 
+const deletionDialog = ref(false);
+const selectedId = ref(0);
+
+function openDeleteModal(topicId) {
+  selectedId.value = topicId;
+  deletionDialog.value = true;
+}
+
+function closeDeleteModal() {
+  deletionDialog.value = false;
+}
+
+function deleteTopic(topicId) {
+  deletionDialog.value = false;
+}
+
+const confirmDeletionText = computed(() => {
+  return `Would you like to delete?`;
+});
+
 
 </script>
 
@@ -89,8 +117,16 @@ const saveTopic = async () => {
             <q-badge color="blue" class="text-body2">{{ props.value }}</q-badge>
           </q-td>
         </template>
+
+        <template v-slot:body-cell-actions="props">
+          <q-td :props="props">
+            <q-btn icon="edit" color="primary" flat round dense @click="openEditDialog(props.row)" size="sm" />
+            <q-btn icon="delete" color="red" flat round dense @click="openDeleteModal(props.row.id)" size="sm" />
+          </q-td>
+        </template>
       </q-table>
     </template>
+
 
     <template v-slot:DialogBox>
       <q-dialog v-model="showDialog">
@@ -113,5 +149,12 @@ const saveTopic = async () => {
         </q-card>
       </q-dialog>
     </template>
+
+    <template v-slot:deleteModal>
+      <BaseConfirmationDialog v-model="deletionDialog" title="Confirm Deletion?" :text="confirmDeletionText"
+        @closeDailog="closeDeleteModal()" @deleteElement="deleteTopic()" id="delete-testseries-confirmation-dialog" />
+    </template>
+
+
   </BaseTable>
 </template>

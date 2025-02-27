@@ -35,6 +35,7 @@ const filter = ref("");
     </q-card>
 
     <slot name="DialogBox"></slot>
+    <slot name="deleteModal"></slot>
   </q-page>
 </template>
 

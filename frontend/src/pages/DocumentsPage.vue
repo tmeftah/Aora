@@ -101,4 +101,3 @@ onMounted(() => {
 
   </BaseTable>
 </template>
-
