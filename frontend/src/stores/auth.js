@@ -4,7 +4,6 @@ import { Notify } from "quasar";
 export const baseUrl = `${process.env.API}`;
 
 export const useAuthStore = defineStore("auth", {
-
   state: () => ({
     user: JSON.parse(localStorage.getItem("user")) || null,
     token: localStorage.getItem("token") || null,
@@ -28,6 +27,7 @@ export const useAuthStore = defineStore("auth", {
       formData.append("grant_type", "password");
       formData.append("username", email);
       formData.append("password", password);
+
       try {
         const response = await fetch(`${baseUrl}/token`, {
           method: "POST",
@@ -46,7 +46,6 @@ export const useAuthStore = defineStore("auth", {
           throw new Error(errorMessage);
         }
 
-        // Parse the success response
         const data = await response.json();
         this.token = data.access_token;
         localStorage.setItem("token", this.token);
@@ -54,10 +53,9 @@ export const useAuthStore = defineStore("auth", {
         Notify.create({
           color: "positive",
           position: "bottom",
-          message: "you are loged in",
+          message: "You are successfully logged in",
           icon: "done",
         });
-
       } catch (error) {
         // Handle network errors and HTTP errors
         if (error.name === "TypeError") {

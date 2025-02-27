@@ -21,31 +21,30 @@ const user = reactive({
 
 const form = ref(null);
 
-async function submit() {
-  if (form.value.validate()) {
-    await authStore
-      .login(user.email, user.password)
-      .then(() => {
-        authStore.getCurrentUser().then(() => {
-          if (authStore.user) {
-            router.push("/");
-            mainStore.get_models();
-          }
-        });
-      })
+async function submitLoginForm() {
 
-      .catch((error) => {
-        console.log("Errorx");
-      });
-  } else {
-    console.log("not valid form");
+  if (!form.value.validate()) {
+    console.log("Invalid form");
+    return;
+  }
+
+  try {
+    await authStore.login(user.email, user.password);
+    await authStore.getCurrentUser();
+
+    if (authStore.user) {
+      router.push("/");
+      await mainStore.get_models();
+    }
+  } catch (error) {
+    console.error("Login failed:", error);
   }
 }
 </script>
 
 
 <template>
-  <div class="row flex justify-center">
+  <div class="row justify-center">
     <q-card class="col-sm-5 bg-light-blue-13 xs-hide no-shadow" square bordered id="leftcard">
       <div class="row q-px-xl q-pb-xl full-height content-center">
         <div class="text-h4 text-uppercase text-white">
@@ -73,7 +72,7 @@ async function submit() {
               </p>
             </div>
 
-            <q-form ref="form" class="q-gutter-md" @submit="submit">
+            <q-form ref="form" class="q-gutter-md" @submit="submitLoginForm">
               <q-input outlined v-model="user.email" label="Email" name="Email" :rules=emailValidationRules />
 
               <q-input outlined v-model="user.password" :type="isPwd ? 'password' : 'text'" label="Password"
