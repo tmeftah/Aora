@@ -1,11 +1,6 @@
 import { defineStore } from "pinia";
 import { Notify } from "quasar";
-import {
-  useAuthStore,
-  baseUrl,
-  apiRequest,
-  showNotification,
-} from "stores/auth";
+import { useAuthStore, apiRequest, showNotification } from "stores/auth";
 
 const authStore = useAuthStore();
 
@@ -18,102 +13,51 @@ export const useTopicStore = defineStore("topics", {
   actions: {
     async getAllTopics() {
       try {
-        const response = await fetch(`${baseUrl}/topics`, {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${authStore.token}`,
-          },
-        });
-
-        if (response.status === 401) {
-          authStore.clearToken();
-          window.location.href = "/login";
-          return;
-        }
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({})); // Parsing might fail, default to empty object
-          const errorMessage =
-            errorData.message || `Error: ${response.statusText}`;
-          throw new Error(errorMessage);
-        }
-
-        const data = await response.json();
-        this.topics = data;
+        const responseData = await apiRequest(
+          "GET",
+          "/topics",
+          null,
+          authStore.token
+        );
+        this.topics = responseData;
       } catch (error) {
-        if (error.name === "TypeError") {
-          console.error("Network error: Could not reach the server");
-          Notify.create({
-            color: "negative",
-            position: "bottom",
-            message: error.message,
-            icon: "report_problem",
-          });
-        } else {
-          console.error(`API error: ${error.message}`);
-          Notify.create({
-            color: "negative",
-            position: "bottom",
-            message: error.message,
-            icon: "report_problem",
-          });
-        }
+        console.log("Error in Fetching topics", error.message);
+        showNotification(
+          "negative",
+          "Topic could not be fetched",
+          "check_circle"
+        );
       }
     },
-    async addTopic(name, details) {
+
+    async addTopic(name, details = null) {
       try {
-        const response = await fetch(`${baseUrl}/topics?name=${name}`, {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authStore.token}`,
-          },
+        const formData = new URLSearchParams({
+          name: name,
         });
+        const responseData = await apiRequest(
+          "POST",
+          `/topics?name=${name}`,
+          formData,
+          authStore.token
+        );
 
-        if (response.status === 401) {
-          authStore.clearToken();
-          window.location.href = "/login";
-          return;
-        }
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          const errorMessage =
-            errorData.message || `Error: ${response.statusText}`;
-          throw new Error(errorMessage);
-        }
-
-        const data = await response.json();
-        this.topics.push(data);
-
-        Notify.create({
-          color: "positive",
-          position: "bottom",
-          message: "Topic added successfully",
-          icon: "check_circle",
-        });
+        this.topics.push(responseData);
+        showNotification(
+          "positive",
+          "Topic added successfully",
+          "check_circle"
+        );
       } catch (error) {
-        if (error.name === "TypeError") {
-          console.error("Network error: Could not reach the server");
-          Notify.create({
-            color: "negative",
-            position: "bottom",
-            message: error.message,
-            icon: "report_problem",
-          });
-        } else {
-          console.error(`API error: ${error.message}`);
-          Notify.create({
-            color: "negative",
-            position: "bottom",
-            message: error.message,
-            icon: "report_problem",
-          });
-        }
+        console.log("Error in adding topic", error.message);
+        showNotification(
+          "negative",
+          "Topic could not be added",
+          "check_circle"
+        );
       }
     },
+
     async deleteTopic(topicName) {
       try {
         await apiRequest(
