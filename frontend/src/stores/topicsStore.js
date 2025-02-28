@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { Notify } from "quasar";
 import { useAuthStore, apiRequest, showNotification } from "stores/auth";
 
 const authStore = useAuthStore();
@@ -76,12 +75,11 @@ export const useTopicStore = defineStore("topics", {
         );
       } catch (error) {
         console.error(`API error: ${error.message}`);
-        Notify.create({
-          color: "negative",
-          position: "bottom",
-          message: error.message,
-          icon: "report_problem",
-        });
+        showNotification(
+          "negative",
+          "Topic could not be deleted",
+          "report_problem"
+        );
       }
     },
   },
