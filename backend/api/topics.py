@@ -8,6 +8,7 @@ from backend.service.oauth import get_current_user
 from backend.service.topics_service import get_all_topics
 from backend.service.topics_service import created_topic
 from backend.service.topics_service import update_topic
+from backend.service.topics_service import delete_topic_details
 from backend.exceptions import DuplicateUserException
 from backend.exceptions import NoTopicFoundException
 
@@ -82,6 +83,27 @@ async def create_topics(
 
     except Exception as e:
         print(e)
+        raise HTTPException(
+            status_code=500,
+            detail="Internal Server error",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
+@topic_router.delete("/{topic_id}", dependencies=[Depends(get_current_user)])
+async def delete_user(
+    topic_id: int,
+    db: Session = Depends(get_db),
+):
+    """Delete a specific user"""
+    try:
+        return delete_topic_details(topic_id=topic_id, db=db)
+
+    except NoTopicFoundException as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+    except Exception as e:
+        print(e)  # remove later
         raise HTTPException(
             status_code=500,
             detail="Internal Server error",

@@ -21,6 +21,13 @@ def get_topic_by_name(name: str, db: Session) -> Topic:
     return topic if topic else None
 
 
+def get_topic_by_id(topic_id: str, db: Session) -> Topic:
+    """Get topic by id"""
+
+    topic = db.query(Topic).filter(Topic.id == topic_id).first()
+    return topic if topic else None
+
+
 def created_topic(
     db: Session,
     name: str,
@@ -50,3 +57,15 @@ def update_topic(
     topic_exists.name = name
     db.commit()
     return TopicPydantic.model_validate({"name": topic_exists.name})
+
+
+def delete_topic_details(db: Session, topic_id: int) -> dict:
+    """Delete user based on user id"""
+
+    topic = get_topic_by_id(topic_id=topic_id, db=db)
+    if not topic:
+        raise NoTopicFoundException()
+
+    db.delete(topic)
+    db.commit()
+    return {"message": "Topic deleted"}
