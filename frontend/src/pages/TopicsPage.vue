@@ -74,9 +74,10 @@ const saveTopic = async () => {
 
 const deletionDialog = ref(false);
 const selectedId = ref(0);
+const selectedName = ref('');
 
-function openDeleteModal(topicId) {
-  selectedId.value = topicId;
+function openDeleteModal(topicName) {
+  selectedName.value = topicName;
   deletionDialog.value = true;
 }
 
@@ -84,7 +85,8 @@ function closeDeleteModal() {
   deletionDialog.value = false;
 }
 
-function deleteTopic(topicId) {
+function deleteTopicItem() {
+  topicStore.deleteTopic(selectedName.value)
   deletionDialog.value = false;
 }
 
@@ -121,7 +123,7 @@ const confirmDeletionText = computed(() => {
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <q-btn icon="edit" color="primary" flat round dense @click="openEditDialog(props.row)" size="sm" />
-            <q-btn icon="delete" color="red" flat round dense @click="openDeleteModal(props.row.id)" size="sm" />
+            <q-btn icon="delete" color="red" flat round dense @click="openDeleteModal(props.row.name)" size="sm" />
           </q-td>
         </template>
       </q-table>
@@ -152,7 +154,8 @@ const confirmDeletionText = computed(() => {
 
     <template v-slot:deleteModal>
       <BaseConfirmationDialog v-model="deletionDialog" title="Confirm Deletion?" :text="confirmDeletionText"
-        @closeDailog="closeDeleteModal()" @deleteElement="deleteTopic()" id="delete-testseries-confirmation-dialog" />
+        @closeDailog="closeDeleteModal()" @deleteElement="deleteTopicItem()"
+        id="delete-testseries-confirmation-dialog" />
     </template>
 
 
