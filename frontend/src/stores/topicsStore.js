@@ -1,6 +1,11 @@
 import { defineStore } from "pinia";
 import { Notify } from "quasar";
-import { useAuthStore, baseUrl } from "stores/auth";
+import {
+  useAuthStore,
+  baseUrl,
+  apiRequest,
+  showNotification,
+} from "stores/auth";
 
 const authStore = useAuthStore();
 
@@ -107,6 +112,32 @@ export const useTopicStore = defineStore("topics", {
             icon: "report_problem",
           });
         }
+      }
+    },
+    async deleteTopic(topicName) {
+      try {
+        await apiRequest(
+          "DELETE",
+          `/topics/${topicName}`,
+          null,
+          authStore.token
+        );
+
+        this.topics = this.topics.filter((topic) => topic.name !== topicName);
+
+        showNotification(
+          "positive",
+          "Topic deleted successfully",
+          "check_circle"
+        );
+      } catch (error) {
+        console.error(`API error: ${error.message}`);
+        Notify.create({
+          color: "negative",
+          position: "bottom",
+          message: error.message,
+          icon: "report_problem",
+        });
       }
     },
   },

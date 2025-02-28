@@ -59,10 +59,10 @@ def update_topic(
     return TopicPydantic.model_validate({"name": topic_exists.name})
 
 
-def delete_topic_details(db: Session, topic_id: int) -> dict:
+def delete_topic_details(db: Session, topic_name: str) -> dict:
     """Delete Topic based on user id"""
 
-    topic = get_topic_by_id(topic_id=topic_id, db=db)
+    topic = get_topic_by_name(name=topic_name, db=db)
     if not topic:
         raise NoTopicFoundException()
 

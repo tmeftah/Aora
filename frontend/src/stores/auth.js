@@ -3,6 +3,39 @@ import { Notify } from "quasar";
 
 export const baseUrl = `${process.env.API}`;
 
+export function showNotification(color, message, icon) {
+  Notify.create({
+    color,
+    position: "bottom",
+    message,
+    icon,
+  });
+}
+
+export async function apiRequest(method, endpoint, body = null, token = null) {
+  const headers = {
+    Accept: "application/json",
+    "Content-Type": "application/x-www-form-urlencoded",
+  };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${baseUrl}${endpoint}`, {
+    method,
+    headers,
+    body: body ? body.toString() : null,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.detail || `Error: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: JSON.parse(localStorage.getItem("user")) || null,
@@ -32,17 +65,13 @@ export const useAuthStore = defineStore("auth", {
       });
 
       try {
-        const data = await this.apiRequest("POST", "/token", formData);
+        const data = await apiRequest("POST", "/token", formData, this.token);
 
         this.token = data.access_token;
         localStorage.setItem("token", this.token);
-        this.showNotification(
-          "positive",
-          "You are successfully logged in",
-          "done"
-        );
+        showNotification("positive", "You are successfully logged in", "done");
       } catch (error) {
-        this.showNotification("negative", error.message, "report_problem");
+        showNotification("negative", error.message, "report_problem");
         throw error;
       }
     },
@@ -132,39 +161,6 @@ export const useAuthStore = defineStore("auth", {
 
     stopRefreshTokenTimer() {
       clearTimeout(this.refreshTokenTimeout);
-    },
-
-    async apiRequest(method, endpoint, body = null) {
-      const headers = {
-        Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded",
-      };
-
-      if (this.token) {
-        headers.Authorization = `Bearer ${this.token}`;
-      }
-
-      const response = await fetch(`${baseUrl}${endpoint}`, {
-        method,
-        headers,
-        body: body ? body.toString() : null,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.detail || `Error: ${response.statusText}`);
-      }
-
-      return response.json();
-    },
-
-    showNotification(color, message, icon) {
-      Notify.create({
-        color,
-        position: "bottom",
-        message,
-        icon,
-      });
     },
   },
 });

@@ -90,14 +90,14 @@ async def update_topics(
         )
 
 
-@topic_router.delete("/{topic_id}", dependencies=[Depends(get_current_user)])
+@topic_router.delete("/{topic_name}", dependencies=[Depends(get_current_user)])
 async def delete_topic(
-    topic_id: int,
+    topic_name: str,
     db: Session = Depends(get_db),
 ):
     """Delete a specific topic"""
     try:
-        return delete_topic_details(topic_id=topic_id, db=db)
+        return delete_topic_details(topic_name=topic_name, db=db)
 
     except NoTopicFoundException as e:
         raise HTTPException(status_code=404, detail=str(e))
