@@ -4,18 +4,18 @@ from sqlalchemy.orm import Session
 
 from backend.models.pydantic_models import TopicPydantic
 from backend.models.sqlalchemy_models import Topic
-from backend.exceptions import DuplicateUserException
+from backend.exceptions import DuplicateTopicException
 from backend.exceptions import NoTopicFoundException
 
 
 def get_all_topics(db: Session) -> List[TopicPydantic]:
-    """Get list of all Users"""
+    """Get list of all Topics"""
 
     return [TopicPydantic(name=topic.name) for topic in db.query(Topic).all()]
 
 
 def get_topic_by_name(name: str, db: Session) -> Topic:
-    """Get user by name"""
+    """Get Topic by name"""
 
     topic = db.query(Topic).filter(Topic.name == name).first()
     return topic if topic else None
@@ -32,11 +32,11 @@ def created_topic(
     db: Session,
     name: str,
 ) -> TopicPydantic:
-    """Create a user based on the information passed"""
+    """Create a Topic based on the information passed"""
 
     topic_exists = get_topic_by_name(name, db)
     if topic_exists:
-        raise DuplicateUserException()
+        raise DuplicateTopicException()
 
     topic = Topic(name=name)
     db.add(topic)
@@ -60,7 +60,7 @@ def update_topic(
 
 
 def delete_topic_details(db: Session, topic_id: int) -> dict:
-    """Delete user based on user id"""
+    """Delete Topic based on user id"""
 
     topic = get_topic_by_id(topic_id=topic_id, db=db)
     if not topic:

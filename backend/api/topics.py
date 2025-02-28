@@ -91,11 +91,11 @@ async def create_topics(
 
 
 @topic_router.delete("/{topic_id}", dependencies=[Depends(get_current_user)])
-async def delete_user(
+async def delete_topic(
     topic_id: int,
     db: Session = Depends(get_db),
 ):
-    """Delete a specific user"""
+    """Delete a specific topic"""
     try:
         return delete_topic_details(topic_id=topic_id, db=db)
 
