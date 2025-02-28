@@ -1,6 +1,10 @@
 import { defineStore } from "pinia";
-import { Notify } from "quasar";
-import { useAuthStore, baseUrl } from "stores/auth";
+import {
+  useAuthStore,
+  baseUrl,
+  apiRequest,
+  showNotification,
+} from "stores/auth";
 
 const authStore = useAuthStore();
 
@@ -15,47 +19,21 @@ export const useDocumentStore = defineStore("documentStore", {
   actions: {
     async get_documents_list() {
       try {
-        const response = await fetch(`${baseUrl}/documents`, {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${authStore.token}`,
-          },
-        });
+        const responseData = await apiRequest(
+          "GET",
+          "/documents",
+          null,
+          authStore.token
+        );
 
-        if (response.status === 401) {
-          authStore.clearToken();
-          window.location.href = "/login";
-          return;
-        }
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          const errorMessage =
-            errorData.message || `Error: ${response.statusText}`;
-          throw new Error(errorMessage);
-        }
-
-        const data = await response.json();
-        this.documents = data;
+        this.documents = responseData;
       } catch (error) {
-        if (error.name === "TypeError") {
-          console.error("Network error: Could not reach the server");
-          Notify.create({
-            color: "negative",
-            position: "bottom",
-            message: error.message,
-            icon: "report_problem",
-          });
-        } else {
-          console.error(`API error: ${error.message}`);
-          Notify.create({
-            color: "negative",
-            position: "bottom",
-            message: error.message,
-            icon: "report_problem",
-          });
-        }
+        console.log("Error in fetching documents", error.message);
+        showNotification(
+          "negative",
+          "Documents could not be fetched at the moment",
+          "check_circle"
+        );
 
         // You can rethrow the error or handle it in some way, e.g., user notification
       }
@@ -82,12 +60,7 @@ export const useDocumentStore = defineStore("documentStore", {
     },
 
     async uploaded_success() {
-      Notify.create({
-        color: "positive",
-        position: "bottom",
-        message: "uploaded",
-        icon: "done",
-      });
+      showNotification("positive", "Document successfully uploaded", "done");
 
       setTimeout(() => {
         this.show_uploader = false;
@@ -98,12 +71,12 @@ export const useDocumentStore = defineStore("documentStore", {
 
     async upload_failed() {
       // FIXME: chech if token is not valid anymore
-      Notify.create({
-        color: "negative",
-        position: "bottom",
-        message: "could not be uploaded",
-        icon: "report_problem",
-      });
+
+      showNotification(
+        "negative",
+        "Documents could not be uploaded",
+        "report_problem"
+      );
       this.show_uploader = true;
     },
   },
