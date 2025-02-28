@@ -65,7 +65,7 @@ async def create_topics(
 
 
 @topic_router.put("/", dependencies=[Depends(get_current_user)])
-async def create_topics(
+async def update_topics(
     old_name: str,
     name: str,
     db: Session = Depends(get_db),
