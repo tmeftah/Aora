@@ -22,9 +22,7 @@ query_router = APIRouter(
 
 
 @query_router.get("/", dependencies=[Depends(get_current_user)])
-
 async def query(query: str, model_name: str):
-
     """
     Handle query requests from user and
     return appropriate response

@@ -28,6 +28,13 @@ export async function apiRequest(method, endpoint, body = null, token = null) {
     body: body ? body.toString() : null,
   });
 
+  if (response.status === 401) {
+    const authStore = useAuthStore(); // this should be changed
+    authStore.clearToken(); // just a small quick fix for now
+    window.location.href = "/login";
+    return;
+  }
+
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
     throw new Error(errorData.detail || `Error: ${response.statusText}`);

@@ -55,13 +55,13 @@ onMounted(() => {
 
 
 <template>
-  <BaseTable title="Documents" filterPlaceholder="Search for Documents...">
+  <BaseTable title="📑 Documents" filterPlaceholder="Search for Documents...">
 
     <template v-slot:customBtn>
-      <q-btn color="secondary" label="Upload" icon="upload">
+      <q-btn color="primary" label="Upload" icon="upload">
         <q-popup-proxy v-model="show_uploader">
           <q-banner>
-            <q-uploader :factory="upload_documents" flat color="secondary" style="max-width: 300px" fieldName="file"
+            <q-uploader :factory="upload_documents" flat color="primary" style="max-width: 300px" fieldName="file"
               accept="application/pdf, text/plain, .md" @uploaded="uploaded_success"
               @failed="upload_failed" /></q-banner>
         </q-popup-proxy>
@@ -93,6 +93,13 @@ onMounted(() => {
               {{ props.row.details }}
             </div>
           </q-td>
+        </template>
+
+        <template v-slot:no-data>
+          <div class="full-width row flex-center q-pa-md">
+            <q-icon name="warning" color="red" size="md" class="q-mr-sm" />
+            <span class="text-grey-8 text-h6">No Documents found, please kindly add some documents </span>
+          </div>
         </template>
       </q-table>
     </template>

@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from backend.api.document import document_router
 from backend.api.health import health_router
-# from backend.api.query import query_router
+from backend.api.query import query_router
 from backend.api.token import token_router
 from backend.api.user import user_router
 from backend.api.topics import topic_router
@@ -48,7 +48,7 @@ app.add_middleware(
 app.include_router(health_router)
 app.include_router(token_router)
 app.include_router(user_router)
-# app.include_router(query_router)
+app.include_router(query_router)
 app.include_router(topic_router)
 app.include_router(document_router)
 

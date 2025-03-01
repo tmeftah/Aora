@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { Notify } from "quasar";
-import { useAuthStore } from "stores/auth";
+import { useAuthStore, apiRequest, showNotification } from "stores/auth";
 
 const authStore = useAuthStore();
 
@@ -30,7 +30,7 @@ export const useMainStore = defineStore("main", {
 
         if (response.status === 401) {
           authStore.clearToken();
-          window.location.href = "/login"; 
+          window.location.href = "/login";
           return;
         }
 
@@ -119,6 +119,19 @@ export const useMainStore = defineStore("main", {
         });
 
       //
+    },
+
+    async askLLM(question, model_name) {
+      this.solution = "";
+      this.loading = true;
+      const responseData = await apiRequest(
+        "GET",
+        `/query?query=${question}&model_name=${model_name}`,
+        null,
+        authStore.token
+      );
+      console.log("Response from LLM", responseData);
+      this.solution = responseData;
     },
   },
 });
