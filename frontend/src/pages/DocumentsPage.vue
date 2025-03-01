@@ -94,6 +94,13 @@ onMounted(() => {
             </div>
           </q-td>
         </template>
+
+        <template v-slot:no-data>
+          <div class="full-width row flex-center q-pa-md">
+            <q-icon name="warning" color="red" size="md" class="q-mr-sm" />
+            <span class="text-grey-8 text-h6">No Documents found, please kindly add some documents </span>
+          </div>
+        </template>
       </q-table>
     </template>
 
