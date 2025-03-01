@@ -102,7 +102,7 @@ const confirmDeletionText = computed(() => {
   <BaseTable title="📚 Topics Management" filterPlaceholder="Search for Topics...">
 
     <template v-slot:customBtn>
-      <q-btn label="Add New Topic" color="primary" icon="add" size="md" @click="showDialog = true" />
+      <q-btn label="Topic" color="primary" icon="add" size="md" @click="showDialog = true" />
     </template>
 
     <template v-slot:dataTable>
