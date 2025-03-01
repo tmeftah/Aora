@@ -3,10 +3,10 @@
     <div class="row items-center justify-between">
       <!-- Search Box (Left) -->
       <div class="col-6">
-        <q-input @keydown.enter.prevent="MainStore.sendQA(question, model_name)" rounded outlined v-model="question"
+        <q-input @keydown.enter.prevent="MainStore.askLLM(question, model_name)" rounded outlined v-model="question"
           placeholder="Ask anything..." type="text" class="full-width" :disable="models.length === 0">
           <template v-slot:prepend>
-            <q-icon name="search" class="q-mr-sm" @click="MainStore.sendQA(question, model_name)" />
+            <q-icon name="search" class="q-mr-sm" @click="MainStore.askLLM(question, model_name)" />
           </template>
           <template v-slot:append>
             <q-avatar>

@@ -13,7 +13,6 @@ async def query_service(query: str, model_name: str):
     try:
 
         api_key = os.getenv("GROQ_API_KEY")
-        api_key = "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"
         if not api_key:
             raise ValueError(
                 "API key is missing. Please set the GROQ_API_KEY environment variable.")
@@ -31,7 +30,7 @@ async def query_service(query: str, model_name: str):
             "max_completion_tokens": 1024,
             "top_p": 1,
             "stream": False,
-            "response_format": {"type": "json_object"},
+            # "response_format": {"type": "json_object"},
             "stop": None
         }
 
