@@ -26,7 +26,7 @@ async def query_service(query: str, model_name: str):
 
         data = {
             "messages": [{"role": "user", "content": query}],
-            "model": "llama-3.3-70b-versatile",
+            "model": model_name,
             "temperature": 1,
             "max_completion_tokens": 1024,
             "top_p": 1,
@@ -36,7 +36,6 @@ async def query_service(query: str, model_name: str):
         }
 
         response = requests.post(url, headers=headers, data=json.dumps(data))
-        print(response)
         response.raise_for_status()
         response_json = response.json()
         return response_json.get('choices', [{}])[0].get('message', {}).get('content', "No content returned.")
