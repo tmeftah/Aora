@@ -24,10 +24,14 @@ onMounted(async () => {
 
 async function getLLMResponse(question, model_name) {
   try {
+    loading.value = true;
     const response = await MainStore.askLLM(question, model_name);
     console.log("Got response:", response);
   } catch (error) {
     console.error("Failed to get response:", error);
+    solution.value = "Error retrieving response.";
+  } finally {
+    loading.value = false;
   }
 }
 </script>
