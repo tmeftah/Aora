@@ -105,6 +105,11 @@ const uploadFile = async () => {
     clearFile();
   }
 };
+
+const resetForm = () => {
+  selectedTopic.value = null;
+  selectedFile.value = null;
+};
 </script>
 
 
@@ -160,7 +165,7 @@ const uploadFile = async () => {
     </template>
 
     <template v-slot:DialogBox>
-      <q-dialog v-model="showDialog">
+      <q-dialog v-model="showDialog" @hide="resetForm">
         <q-card style="width: 400px">
           <q-card-section>
             <div class="text-h6">Upload Document</div>
