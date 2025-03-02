@@ -5,6 +5,7 @@ import { date } from "quasar";
 import { useDocumentStore } from "../stores/documentStore";
 import { onMounted } from "vue";
 import BaseTable from "src/base/components/BaseTable.vue"
+import { showNotification } from 'src/stores/auth';
 
 defineOptions({
   name: "DocumentsPage",
@@ -51,6 +52,64 @@ onMounted(() => {
   console.log("DocumentsPage component mounted");
   get_documents_list();
 });
+
+const showDialog = ref(false);
+const selectedTopic = ref(null);
+const selectedFile = ref(null);
+const topics = ref(["Topic A", "Topic B", "Topic C"]);
+const isLoading = ref(false);
+
+const onFileSelected = (file) => {
+  selectedFile.value = file;
+};
+
+const clearFile = () => {
+  selectedFile.value = null;
+};
+const uploadFile = async () => {
+  if (!selectedFile.value || !selectedTopic.value) return;
+
+  isLoading.value = true;
+  let formData = new FormData();
+  formData.append('file', selectedFile.value);
+  // formData.append('topic', selectedTopic.value);
+
+  try {
+    const uploadConfig = await upload_documents();
+
+    const response = await fetch(uploadConfig.url, {
+      method: uploadConfig.method,
+      headers: uploadConfig.headers.reduce((acc, header) => {
+        acc[header.name] = header.value;
+        return acc;
+      }, {}),
+      body: formData
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Upload successful', data);
+      showNotification("positive", "Document successfully uploaded", "done");
+      uploaded_success();
+      showDialog.value = false;
+    } else {
+      throw new Error("Upload failed");
+    }
+  } catch (error) {
+    showDialog.value = false;
+    console.error('Upload failed', error);
+    showNotification("negative", "Documents could not be uploaded", "report_problem");
+    upload_failed();
+  } finally {
+    isLoading.value = false;
+    clearFile();
+  }
+};
+
+const resetForm = () => {
+  selectedTopic.value = null;
+  selectedFile.value = null;
+};
 </script>
 
 
@@ -58,14 +117,15 @@ onMounted(() => {
   <BaseTable title="📑 Documents" filterPlaceholder="Search for Documents...">
 
     <template v-slot:customBtn>
-      <q-btn color="primary" label="Upload" icon="upload">
+      <q-btn label="Upload Document" icon="upload" color="primary" @click="showDialog = true" />
+      <!-- <q-btn color="primary" label="Upload" icon="upload">
         <q-popup-proxy v-model="show_uploader">
           <q-banner>
             <q-uploader :factory="upload_documents" flat color="primary" style="max-width: 300px" fieldName="file"
               accept="application/pdf, text/plain, .md" @uploaded="uploaded_success"
               @failed="upload_failed" /></q-banner>
         </q-popup-proxy>
-      </q-btn>
+      </q-btn> -->
     </template>
 
     <template v-slot:dataTable>
@@ -104,7 +164,35 @@ onMounted(() => {
       </q-table>
     </template>
 
-    <template v-slot:DialogBox></template>
+    <template v-slot:DialogBox>
+      <q-dialog v-model="showDialog" @hide="resetForm">
+        <q-card style="width: 400px">
+          <q-card-section>
+            <div class="text-h6">Upload Document</div>
+          </q-card-section>
+
+          <q-form @submit.prevent="uploadFile">
+            <q-card-section>
+              <q-select outlined v-model="selectedTopic" :options="topics" label="Select Topic" />
+
+              <q-file outlined class="q-mt-md" v-model="selectedFile" label="Choose File"
+                @update:model-value="onFileSelected" clearable />
+
+              <div v-if="selectedFile" class="q-mt-md">
+                <q-chip removable @remove="clearFile">{{ selectedFile.name }}</q-chip>
+              </div>
+            </q-card-section>
+
+            <q-card-actions align="right">
+              <q-btn label="Cancel" color="negative" @click="showDialog = false" />
+              <q-btn label="Clear" color="warning" @click="clearFile" :disable="!selectedFile" />
+              <q-btn icon="upload" label="Upload" color="primary" type="submit"
+                :disable="!selectedFile || !selectedTopic" :loading="isLoading" />
+            </q-card-actions>
+          </q-form>
+        </q-card>
+      </q-dialog>
+    </template>
 
   </BaseTable>
 </template>
