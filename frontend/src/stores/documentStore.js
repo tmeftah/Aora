@@ -79,5 +79,33 @@ export const useDocumentStore = defineStore("documentStore", {
       );
       this.show_uploader = true;
     },
+
+    async deleteDocument(documentName) {
+      try {
+        await apiRequest(
+          "DELETE",
+          `/documents/${documentName}`,
+          null,
+          authStore.token
+        );
+
+        this.documents = this.documents.filter(
+          (doc) => doc.filename !== documentName
+        );
+
+        showNotification(
+          "positive",
+          "Document deleted successfully",
+          "check_circle"
+        );
+      } catch (error) {
+        console.error(`API error: ${error.message}`);
+        showNotification(
+          "negative",
+          "Document could not be deleted",
+          "report_problem"
+        );
+      }
+    },
   },
 });

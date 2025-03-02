@@ -5,8 +5,9 @@ import { date } from "quasar";
 import { useDocumentStore } from "../stores/documentStore";
 import { useTopicStore } from '../stores/topicsStore';
 import { onMounted } from "vue";
-import BaseTable from "src/base/components/BaseTable.vue"
 import { showNotification } from 'src/stores/auth';
+import BaseTable from "src/base/components/BaseTable.vue"
+import BaseConfirmationDialog from "src/base/components/BaseConfirmationDialog.vue";
 
 defineOptions({
   name: "DocumentsPage",
@@ -53,6 +54,13 @@ const columns = [
     label: "Topic ID",
     field: "topic_id",
     sortable: true,
+  },
+  {
+    name: "actions",
+    label: "Actions",
+    align: "left",
+    field: "actions",
+    sortable: false,
   },
 ];
 const filter = ref("");
@@ -135,6 +143,29 @@ const openDialog = async () => {
   showDialog.value = true;
 };
 
+const deletionDialog = ref(false);
+const selectedId = ref(0);
+const selectedName = ref('');
+
+function openDeleteModal(documentName) {
+  console.log("Document name: " + documentName);
+  selectedName.value = documentName;
+  deletionDialog.value = true;
+}
+
+function closeDeleteModal() {
+  deletionDialog.value = false;
+}
+
+function deleteDocumentItem() {
+  DocumentStore.deleteDocument(selectedName.value)
+  deletionDialog.value = false;
+}
+
+const confirmDeletionText = computed(() => {
+  return `Would you like to delete this document?`;
+});
+
 </script>
 
 
@@ -180,6 +211,13 @@ const openDialog = async () => {
           </q-td>
         </template>
 
+        <template v-slot:body-cell-actions="props">
+          <q-td :props="props">
+            <q-btn icon="edit" color="primary" round dense size="sm" disabled />
+            <q-btn icon="delete" color="red" round dense @click="openDeleteModal(props.row.filename)" size="sm" />
+          </q-td>
+        </template>
+
         <template v-slot:no-data>
           <div class="full-width row flex-center q-pa-md">
             <q-icon name="warning" color="red" size="md" class="q-mr-sm" />
@@ -188,6 +226,7 @@ const openDialog = async () => {
         </template>
       </q-table>
     </template>
+
 
     <template v-slot:DialogBox>
       <q-dialog v-model="showDialog" @hide="resetForm">
@@ -218,6 +257,12 @@ const openDialog = async () => {
           </q-form>
         </q-card>
       </q-dialog>
+    </template>
+
+    <template v-slot:deleteModal>
+      <BaseConfirmationDialog v-model="deletionDialog" title="Confirm Deletion?" :text="confirmDeletionText"
+        @closeDailog="closeDeleteModal()" @deleteElement="deleteDocumentItem()"
+        id="delete-document-confirmation-dialog" />
     </template>
 
   </BaseTable>
