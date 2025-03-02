@@ -122,7 +122,7 @@ const confirmDeletionText = computed(() => {
 
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
-            <q-btn icon="edit" color="primary" flat round dense @click="openEditDialog(props.row)" size="sm" />
+            <q-btn icon="edit" color="primary" flat round dense @click="openEditDialog(props.row)" size="sm" disabled />
             <q-btn icon="delete" color="red" flat round dense @click="openDeleteModal(props.row.name)" size="sm" />
           </q-td>
         </template>
