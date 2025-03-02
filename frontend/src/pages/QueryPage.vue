@@ -42,6 +42,7 @@ async function getLLMResponse(question, model_name) {
           placeholder="Ask anything..." type="text" class="full-width" :disable="models.length === 0">
           <template v-slot:prepend>
             <q-icon name="search" class="q-mr-sm" @click="getLLMResponse(question, model_name)" />
+
           </template>
           <template v-slot:append>
             <q-avatar>
