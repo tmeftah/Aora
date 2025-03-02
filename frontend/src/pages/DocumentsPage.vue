@@ -184,10 +184,10 @@ const resetForm = () => {
             </q-card-section>
 
             <q-card-actions align="right">
-              <q-btn flat label="Cancel" color="negative" @click="showDialog = false" />
-              <q-btn flat label="Clear" color="warning" @click="clearFile" :disable="!selectedFile" />
-              <q-btn label="Upload" color="primary" type="submit" :disable="!selectedFile || !selectedTopic"
-                :loading="isLoading" />
+              <q-btn label="Cancel" color="negative" @click="showDialog = false" />
+              <q-btn label="Clear" color="warning" @click="clearFile" :disable="!selectedFile" />
+              <q-btn icon="upload" label="Upload" color="primary" type="submit"
+                :disable="!selectedFile || !selectedTopic" :loading="isLoading" />
             </q-card-actions>
           </q-form>
         </q-card>
