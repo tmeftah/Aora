@@ -13,7 +13,7 @@ async def query_service(query: str, model_name: str):
     try:
 
         api_key = os.getenv("GROQ_API_KEY")
-        api_key = "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"
+        # api_key = "gsk_a00RgeEIYvxxqNMDwO6QWGdyb3FYKgMh6kS7n5ol5OmjJesBJaZgg1"
         if not api_key:
             raise ValueError(
                 "API key is missing. Please set the GROQ_API_KEY environment variable.")
@@ -56,7 +56,7 @@ async def model_list() -> list:
     try:
         # return get_list_available_models()
         api_key = os.getenv("GROQ_API_KEY")
-        api_key = "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"
+        # api_key = "gsk_a00RgeEIYvxxqNMDwO6QWGdyb3FYKgMh6kS7n5ol5OmjJesBJaZgg1"
         if not api_key:
             raise ValueError(
                 "API key is missing. Please set the GROQ_API_KEY environment variable.")
