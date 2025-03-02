@@ -1,8 +1,9 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { storeToRefs } from "pinia";
 import { date } from "quasar";
 import { useDocumentStore } from "../stores/documentStore";
+import { useTopicStore } from '../stores/topicsStore';
 import { onMounted } from "vue";
 import BaseTable from "src/base/components/BaseTable.vue"
 import { showNotification } from 'src/stores/auth';
@@ -12,6 +13,7 @@ defineOptions({
 });
 
 const DocumentStore = useDocumentStore();
+const topicStore = useTopicStore();
 const {
   get_documents_list,
   upload_documents,
@@ -22,7 +24,7 @@ const { documents, show_uploader } = storeToRefs(DocumentStore);
 
 const columns = [
   {
-    name: "filename",
+    name: "name",
     required: true,
     label: "Name",
     align: "left",
@@ -51,13 +53,15 @@ const filter = ref("");
 onMounted(() => {
   console.log("DocumentsPage component mounted");
   get_documents_list();
+  getAllTopics();
 });
 
 const showDialog = ref(false);
 const selectedTopic = ref(null);
 const selectedFile = ref(null);
-const topics = ref(["Topic A", "Topic B", "Topic C"]);
+const AllTopicNames = computed(() => topics.value.map(topic => topic.name));
 const isLoading = ref(false);
+const isLoadingTopics = ref(true);
 
 const onFileSelected = (file) => {
   selectedFile.value = file;
@@ -110,6 +114,19 @@ const resetForm = () => {
   selectedTopic.value = null;
   selectedFile.value = null;
 };
+
+const { getAllTopics } = topicStore;
+const { topics } = storeToRefs(topicStore);
+
+const openDialog = async () => {
+  isLoadingTopics.value = false;
+  if (topics.value.length === 0) {
+    showNotification("negative", "No topics available. Cannot upload.", "report_problem");
+    return;
+  }
+  showDialog.value = true;
+};
+
 </script>
 
 
@@ -117,7 +134,7 @@ const resetForm = () => {
   <BaseTable title="📑 Documents" filterPlaceholder="Search for Documents...">
 
     <template v-slot:customBtn>
-      <q-btn label="Upload Document" icon="upload" color="primary" @click="showDialog = true" />
+      <q-btn label="Upload Document" icon="upload" color="primary" @click="openDialog" />
       <!-- <q-btn color="primary" label="Upload" icon="upload">
         <q-popup-proxy v-model="show_uploader">
           <q-banner>
@@ -173,7 +190,8 @@ const resetForm = () => {
 
           <q-form @submit.prevent="uploadFile">
             <q-card-section>
-              <q-select outlined v-model="selectedTopic" :options="topics" label="Select Topic" />
+              <q-select outlined v-model="selectedTopic" :options="AllTopicNames" label="Select Topic"
+                :disable="isLoadingTopics" />
 
               <q-file outlined class="q-mt-md" v-model="selectedFile" label="Choose File"
                 @update:model-value="onFileSelected" clearable />
@@ -187,7 +205,7 @@ const resetForm = () => {
               <q-btn label="Cancel" color="negative" @click="showDialog = false" />
               <q-btn label="Clear" color="warning" @click="clearFile" :disable="!selectedFile" />
               <q-btn icon="upload" label="Upload" color="primary" type="submit"
-                :disable="!selectedFile || !selectedTopic" :loading="isLoading" />
+                :disable="!selectedFile || !selectedTopic || AllTopicNames.length === 0" :loading="isLoading" />
             </q-card-actions>
           </q-form>
         </q-card>

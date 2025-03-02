@@ -140,7 +140,7 @@ const confirmDeletionText = computed(() => {
     <template v-slot:DialogBox>
       <q-dialog v-model="showDialog">
         <q-card style="min-width: 500px">
-          <q-card-section class="bg-secondary text-white text-center">
+          <q-card-section class="bg-primary text-white text-center">
             <div class="text-h5"> Add New Topic</div>
           </q-card-section>
 
@@ -152,8 +152,8 @@ const confirmDeletionText = computed(() => {
           </q-card-section>
 
           <q-card-actions align="right">
-            <q-btn flat label="Cancel" color="negative" @click="showDialog = false" />
-            <q-btn label="Add Topic" color="positive" @click="saveTopic" />
+            <q-btn label="Cancel" color="negative" @click="showDialog = false" />
+            <q-btn label="Add Topic" color="primary" @click="saveTopic" />
           </q-card-actions>
         </q-card>
       </q-dialog>
