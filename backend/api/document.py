@@ -10,6 +10,7 @@ from backend.exceptions import NoDocumentsFoundException
 from backend.models.sqlalchemy_models import User
 from backend.service.document_service import document_list
 from backend.service.document_service import save_document
+from backend.service.document_service import delete_document
 from backend.service.oauth import get_current_user
 
 # from fastapi.responses import JSONResponse
@@ -29,6 +30,7 @@ document_router = APIRouter(
 
 @document_router.post("/upload", dependencies=[Depends(get_current_user)])
 async def upload_file(
+    topic_name: str,
     current_user: User = Depends(get_current_user),
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
@@ -39,7 +41,7 @@ async def upload_file(
     and content type as a JSON response.
     """
     try:
-        return save_document(file=file, db=db)
+        return save_document(topic_name=topic_name, file=file, db=db)
 
     except Exception as e:
         raise HTTPException(
@@ -62,6 +64,27 @@ def list_documents(
         return []
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@document_router.delete("/{document_name}", dependencies=[Depends(get_current_user)])
+async def delete_topic(
+    document_name: str,
+    db: Session = Depends(get_db),
+):
+    """Delete a specific document"""
+    try:
+        return delete_document(document_name=document_name, db=db)
+
+    except NoDocumentsFoundException as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+    except Exception as e:
+        print(e)  # remove later
+        raise HTTPException(
+            status_code=500,
+            detail="Internal Server error",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
 
 # @document_router.post("/upload-multiple/")

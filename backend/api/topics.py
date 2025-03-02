@@ -9,6 +9,7 @@ from backend.service.topics_service import get_all_topics
 from backend.service.topics_service import created_topic
 from backend.service.topics_service import update_topic
 from backend.service.topics_service import delete_topic_details
+from backend.service.topics_service import get_topic_by_name
 from backend.exceptions import DuplicateUserException
 from backend.exceptions import NoTopicFoundException
 
@@ -32,6 +33,22 @@ async def get_topics(
 
     try:
         return get_all_topics(db=db)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=str(e),
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
+@topic_router.get("/{topic_name}", dependencies=[Depends(get_current_user)])
+async def get_topic_id(topic_name: str,
+                       db: Session = Depends(get_db),
+                       ):
+    """Get all topics by name"""
+
+    try:
+        return get_topic_by_name(name=topic_name, db=db)
     except Exception as e:
         raise HTTPException(
             status_code=500,

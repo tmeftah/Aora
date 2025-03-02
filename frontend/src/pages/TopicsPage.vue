@@ -91,7 +91,7 @@ function deleteTopicItem() {
 }
 
 const confirmDeletionText = computed(() => {
-  return `Would you like to delete?`;
+  return `Would you like to delete <strong> ${selectedName.value} </strong> ?`;
 });
 
 
@@ -122,8 +122,8 @@ const confirmDeletionText = computed(() => {
 
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
-            <q-btn icon="edit" color="primary" flat round dense @click="openEditDialog(props.row)" size="sm" />
-            <q-btn icon="delete" color="red" flat round dense @click="openDeleteModal(props.row.name)" size="sm" />
+            <q-btn icon="edit" color="primary" round dense @click="openEditDialog(props.row)" size="sm" disabled />
+            <q-btn icon="delete" color="red" round dense @click="openDeleteModal(props.row.name)" size="sm" />
           </q-td>
         </template>
 
@@ -140,7 +140,7 @@ const confirmDeletionText = computed(() => {
     <template v-slot:DialogBox>
       <q-dialog v-model="showDialog">
         <q-card style="min-width: 500px">
-          <q-card-section class="bg-secondary text-white text-center">
+          <q-card-section class="bg-primary text-white text-center">
             <div class="text-h5"> Add New Topic</div>
           </q-card-section>
 
@@ -152,8 +152,8 @@ const confirmDeletionText = computed(() => {
           </q-card-section>
 
           <q-card-actions align="right">
-            <q-btn flat label="Cancel" color="negative" @click="showDialog = false" />
-            <q-btn label="Add Topic" color="positive" @click="saveTopic" />
+            <q-btn label="Cancel" color="negative" @click="showDialog = false" />
+            <q-btn label="Add Topic" color="primary" @click="saveTopic" />
           </q-card-actions>
         </q-card>
       </q-dialog>
@@ -161,8 +161,7 @@ const confirmDeletionText = computed(() => {
 
     <template v-slot:deleteModal>
       <BaseConfirmationDialog v-model="deletionDialog" title="Confirm Deletion?" :text="confirmDeletionText"
-        @closeDailog="closeDeleteModal()" @deleteElement="deleteTopicItem()"
-        id="delete-testseries-confirmation-dialog" />
+        @closeDailog="closeDeleteModal()" @deleteElement="deleteTopicItem()" id="delete-topics-confirmation-dialog" />
     </template>
 
 
