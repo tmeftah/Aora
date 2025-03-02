@@ -13,6 +13,7 @@ async def query_service(query: str, model_name: str):
     try:
 
         api_key = os.getenv("GROQ_API_KEY")
+        api_key = "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"
         if not api_key:
             raise ValueError(
                 "API key is missing. Please set the GROQ_API_KEY environment variable.")
@@ -55,7 +56,26 @@ async def model_list() -> list:
 
     try:
         # return get_list_available_models()
-        return ['llama-3.3-70b-versatile']
+        api_key = os.getenv("GROQ_API_KEY")
+        api_key = "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"
+        if not api_key:
+            raise ValueError(
+                "API key is missing. Please set the GROQ_API_KEY environment variable.")
+
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}"
+        }
+        url = "https://api.groq.com/openai/v1/models"
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            model_names = [model["id"] for model in data.get("data", [])]
+            return model_names
+        else:
+            print(
+                f"Failed to fetch models: {response.status_code}, {response.text}")
+            return []
 
     except Exception as e:
         raise ModelsNotRetrievedException()

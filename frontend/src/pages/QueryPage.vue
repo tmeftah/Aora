@@ -18,8 +18,7 @@
 
       <!-- Model Selection (Right) -->
       <div class="col-3-auto q-ml-md">
-        <q-select transition-show="flip-up" transition-hide="flip-down" dense options-dense outlined
-          v-model="model_name" :options="models" label="Model" class="model-select"
+        <q-select dense options-dense outlined v-model="model_name" :options="models" label="Model" class="model-select"
           @update:model-value="(val) => MainStore.set_model_name(val)">
           <template v-slot:append v-if="models.length === 0">
             <q-icon name="warning" color="red">
