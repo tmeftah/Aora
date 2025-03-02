@@ -75,7 +75,7 @@ async def model_list() -> list:
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
             data = response.json()
-            print(data)
+            #print(data)
             model_names = [model["id"] for model in data.get("data", [])]
             return model_names
         else:

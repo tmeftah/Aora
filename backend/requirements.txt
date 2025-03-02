@@ -1,5 +1,7 @@
 sqlalchemy
 fastapi[standard]
+requests
 pyjwt
 python-dotenv
+bcrypt
 pytest
