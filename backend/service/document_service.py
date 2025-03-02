@@ -8,11 +8,12 @@ from sqlalchemy.orm import Session
 from backend.exceptions import NoDocumentsFoundException
 from backend.models.pydantic_models import DocumentPydantic
 from backend.models.sqlalchemy_models import Documents
+from backend.service.topics_service import get_topic_by_name
 
 documenst_directory = os.getenv("DOCUMENTS_DIRECTORY", "documents/")
 
 
-def save_document(file: File, db: Session) -> DocumentPydantic:
+def save_document(topic_name: str, file: File, db: Session) -> DocumentPydantic:
     """Gets the uploaded document, saves the document
     in the docs folder and creates a hash of the document
     and saves it in db"""
@@ -26,11 +27,16 @@ def save_document(file: File, db: Session) -> DocumentPydantic:
 
     file_hash = hashlib.sha256(open(file_location, "rb").read()).hexdigest()
 
+    topic = get_topic_by_name(name=topic_name, db=db)
+    if not topic:
+        raise Exception("Topic not found")
+
     new_document = Documents(
         filename=file.filename,
         filehash=file_hash,
         status="on progress",
         content_type=file.content_type,
+        topic_id=topic.id
     )
     db.add(new_document)
     db.commit()

@@ -29,6 +29,7 @@ document_router = APIRouter(
 
 @document_router.post("/upload", dependencies=[Depends(get_current_user)])
 async def upload_file(
+    topic_name: str,
     current_user: User = Depends(get_current_user),
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
@@ -39,7 +40,7 @@ async def upload_file(
     and content type as a JSON response.
     """
     try:
-        return save_document(file=file, db=db)
+        return save_document(topic_name=topic_name, file=file, db=db)
 
     except Exception as e:
         raise HTTPException(

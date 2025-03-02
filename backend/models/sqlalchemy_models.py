@@ -3,8 +3,10 @@ from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey
 import datetime
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
@@ -32,10 +34,17 @@ class Documents(Base):
     filehash = Column(String, unique=True)
     content_type = Column(String)
     status = Column(String)
-    created_at = Column(DateTime, default= datetime.datetime.now)
-    updated_at = Column(DateTime, default= datetime.datetime.now)
+    created_at = Column(DateTime, default=datetime.datetime.now)
+    updated_at = Column(DateTime, default=datetime.datetime.now)
+    topic_id = Column(Integer, ForeignKey("topics.id"), nullable=False)
+
+    topic = relationship("Topic", back_populates="documents")
+
 
 class Topic(Base):
     __tablename__ = "topics"
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
+
+    documents = relationship(
+        "Documents", back_populates="topic")
