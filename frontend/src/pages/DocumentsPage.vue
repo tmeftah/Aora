@@ -163,7 +163,7 @@ function deleteDocumentItem() {
 }
 
 const confirmDeletionText = computed(() => {
-  return `Would you like to delete this document?`;
+  return `Would you like to delete this <strong> ${selectedName.value} </strong> document?`;
 });
 
 </script>
