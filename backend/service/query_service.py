@@ -2,7 +2,7 @@ import json
 import requests
 import os
 from backend.exceptions import ModelsNotRetrievedException
-from backend.service.llm_utils import get_list_available_models
+
 
 
 async def query_service(query: str, model_name: str):
@@ -12,17 +12,18 @@ async def query_service(query: str, model_name: str):
 
     try:
 
-        api_key = os.getenv("GROQ_API_KEY")
-        # api_key = "gsk_a00RgeEIYvxxqNMDwO6QWGdyb3FYKgMh6kS7n5ol5OmjJesBJaZgg1"
+        api_key = os.getenv("LLM_API_KEY")
+        
         if not api_key:
             raise ValueError(
-                "API key is missing. Please set the GROQ_API_KEY environment variable.")
+                "API key is missing. Please set the GROQ_API_KEY environment variable."
+            )
 
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}"
+            "Authorization": f"Bearer {api_key}",
         }
-        url = "https://api.groq.com/openai/v1/chat/completions"
+        url = os.getenv("LLM_API_BASE_URL") + "/v1/chat/completions"
 
         data = {
             "messages": [{"role": "user", "content": query}],
@@ -32,13 +33,17 @@ async def query_service(query: str, model_name: str):
             "top_p": 1,
             "stream": False,
             # "response_format": {"type": "json_object"},
-            "stop": None
+            "stop": None,
         }
 
         response = requests.post(url, headers=headers, data=json.dumps(data))
         response.raise_for_status()
         response_json = response.json()
-        return response_json.get('choices', [{}])[0].get('message', {}).get('content', "No content returned.")
+        return (
+            response_json.get("choices", [{}])[0]
+            .get("message", {})
+            .get("content", "No content returned.")
+        )
 
     except requests.exceptions.RequestException as e:
         return f"Request error: {e}"
@@ -54,26 +59,27 @@ async def model_list() -> list:
     """List all downloaded ollama models"""
 
     try:
-        # return get_list_available_models()
-        api_key = os.getenv("GROQ_API_KEY")
-        # api_key = "gsk_a00RgeEIYvxxqNMDwO6QWGdyb3FYKgMh6kS7n5ol5OmjJesBJaZgg1"
+       
+        api_key = os.getenv("LLM_API_KEY")
+       
         if not api_key:
             raise ValueError(
-                "API key is missing. Please set the GROQ_API_KEY environment variable.")
+                "API key is missing. Please set the GROQ_API_KEY environment variable."
+            )
 
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}"
+            "Authorization": f"Bearer {api_key}",
         }
-        url = "https://api.groq.com/openai/v1/models"
+        url =  os.getenv("LLM_API_BASE_URL")+ "/v1/models"
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
             data = response.json()
+            print(data)
             model_names = [model["id"] for model in data.get("data", [])]
             return model_names
         else:
-            print(
-                f"Failed to fetch models: {response.status_code}, {response.text}")
+            print(f"Failed to fetch models: {response.status_code}, {response.text}")
             return []
 
     except Exception as e:

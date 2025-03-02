@@ -1,9 +1,3 @@
-langchain
-langchain_community
-langchain_core
-langchain_chroma
-langchain_ollama
-langfuse
 sqlalchemy
 fastapi[standard]
 pyjwt
