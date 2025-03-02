@@ -44,6 +44,7 @@ export const useMainStore = defineStore("main", {
         const data = await response.json();
         this.models = data;
         localStorage.setItem("models", JSON.stringify(this.models));
+
       } catch (error) {
         console.error(`API error: ${error.message}`);
         Notify.create({
