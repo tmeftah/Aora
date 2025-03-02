@@ -19,18 +19,13 @@ class UserPydantic(BaseModel):
 
 class DocumentPydantic(BaseModel):
     model_config = ConfigDict(from_attributes=True)
-    
+
     filename: str
     content_type: str
-    status:str
-    created_at:datetime
+    status: str
+    created_at: datetime
+    topic_id: int
+
 
 class TopicPydantic(BaseModel):
     name: str
-
-    
-  
-
-
-    
-   

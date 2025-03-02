@@ -47,6 +47,13 @@ const columns = [
     field: "status",
     sortable: true,
   },
+  {
+    name: "topic_id",
+    align: "center",
+    label: "Topic ID",
+    field: "topic_id",
+    sortable: true,
+  },
 ];
 const filter = ref("");
 
