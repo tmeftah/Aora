@@ -70,16 +70,17 @@ const onFileSelected = (file) => {
 const clearFile = () => {
   selectedFile.value = null;
 };
+
 const uploadFile = async () => {
   if (!selectedFile.value || !selectedTopic.value) return;
 
   isLoading.value = true;
   let formData = new FormData();
   formData.append('file', selectedFile.value);
-  // formData.append('topic', selectedTopic.value);
+  // formData.append('topic_name', selectedTopic.value);
 
   try {
-    const uploadConfig = await upload_documents();
+    const uploadConfig = await upload_documents(selectedTopic.value);
 
     const response = await fetch(uploadConfig.url, {
       method: uploadConfig.method,

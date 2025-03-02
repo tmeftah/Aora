@@ -6,6 +6,7 @@ const authStore = useAuthStore();
 export const useTopicStore = defineStore("topics", {
   state: () => ({
     topics: [],
+    topicName: "",
   }),
   getters: {},
 
@@ -19,6 +20,25 @@ export const useTopicStore = defineStore("topics", {
           authStore.token
         );
         this.topics = responseData;
+      } catch (error) {
+        console.log("Error in Fetching topics", error.message);
+        showNotification(
+          "negative",
+          "Topic could not be fetched",
+          "check_circle"
+        );
+      }
+    },
+
+    async getTopicByName(name) {
+      try {
+        const responseData = await apiRequest(
+          "GET",
+          `/topic?topic_name=${name}`,
+          null,
+          authStore.token
+        );
+        this.topicName = responseData;
       } catch (error) {
         console.log("Error in Fetching topics", error.message);
         showNotification(
