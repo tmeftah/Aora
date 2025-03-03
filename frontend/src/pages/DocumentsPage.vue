@@ -79,6 +79,12 @@ const isLoading = ref(false);
 const isLoadingTopics = ref(true);
 
 const onFileSelected = (file) => {
+  if (file && !["application/pdf", "text/plain"].includes(file.type)) {
+    showNotification("negative", "Only PDFs or plain txt files are allowed.", "report_problem");
+
+    selectedFile.value = null;
+    return;
+  }
   selectedFile.value = file;
 };
 
@@ -241,7 +247,7 @@ const confirmDeletionText = computed(() => {
                 :disable="isLoadingTopics" />
 
               <q-file outlined class="q-mt-md" v-model="selectedFile" label="Choose File"
-                @update:model-value="onFileSelected" clearable />
+                @update:model-value="onFileSelected" accept=".pdf, .txt" clearable />
 
               <div v-if="selectedFile" class="q-mt-md">
                 <q-chip removable @remove="clearFile">{{ selectedFile.name }}</q-chip>
