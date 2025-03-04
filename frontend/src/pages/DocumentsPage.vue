@@ -143,7 +143,7 @@ const { topics } = storeToRefs(topicStore);
 const openDialog = async () => {
   isLoadingTopics.value = false;
   if (topics.value.length === 0) {
-    showNotification("negative", "No topics available. Cannot upload.", "report_problem");
+    showNotification("negative", "Please kindly add some topics before uploading any documents.", "report_problem");
     return;
   }
   showDialog.value = true;
