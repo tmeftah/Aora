@@ -28,7 +28,7 @@ def retrieve_relevant_chunks(query: str, topics: List[str]):
     return results["documents"][0] if "documents" in results and results["documents"] else []
 
 
-async def query_service(query: str, model_name: str, topics: List[str] = ['example']):
+async def query_service(query: str, model_name: str, topics: List[str]):
     """
     Process a query and return a streaming response.
     """
