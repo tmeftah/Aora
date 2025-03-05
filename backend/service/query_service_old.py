@@ -4,7 +4,7 @@ import uuid
 
 from fastapi.responses import StreamingResponse
 
-from backend.embeddings.ingest import get_vectorstore
+from backend.embeddings.old_code.ingest import get_vectorstore
 from backend.exceptions import ModelsNotRetrievedException
 from backend.service.llm_utils import create_chain, get_list_available_models
 
