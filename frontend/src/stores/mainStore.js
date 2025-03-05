@@ -44,7 +44,6 @@ export const useMainStore = defineStore("main", {
         const data = await response.json();
         this.models = data;
         localStorage.setItem("models", JSON.stringify(this.models));
-
       } catch (error) {
         console.error(`API error: ${error.message}`);
         Notify.create({
@@ -121,12 +120,12 @@ export const useMainStore = defineStore("main", {
       //
     },
 
-    async askLLM(question, model_name) {
+    async askLLM(question, model_name, selectedTopics) {
       this.solution = "";
       this.loading = true;
       const responseData = await apiRequest(
         "GET",
-        `/query?query=${question}&model_name=${model_name}`,
+        `/query?query=${question}&topics=${selectedTopics}&model_name=${model_name}`,
         null,
         authStore.token
       );
