@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
-
+from fastapi import Query
 
 from backend.exceptions import ModelsNotRetrievedException
 from backend.exceptions import NoValidPermissionsException
@@ -10,7 +10,6 @@ from backend.service.query_service import model_list
 from backend.service.query_service import query_service
 from typing import List
 
-from fastapi import Query
 
 query_router = APIRouter(
     prefix="/query",
