@@ -1,10 +1,18 @@
 <script setup>
 import BaseTable from "src/base/components/BaseTable.vue"
+import { useUserStore } from "src/stores/userStore"
+import { onMounted } from "vue";
+import { storeToRefs } from "pinia";
 
 defineOptions({
   name: "ProfilePage",
 });
 
+const userStore = useUserStore();
+const { currentUser } = storeToRefs(userStore);
+onMounted(async () => {
+  userStore.getCurrentUser();
+})
 
 
 </script>

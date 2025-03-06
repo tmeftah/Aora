@@ -2,10 +2,11 @@
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "../stores/auth";
-import { useMainStore } from "src/stores/mainStore";
 import { useRouter } from "vue-router";
 import { Notify } from "quasar";
 import EssentialLink from "components/EssentialLink.vue";
+import { useUserStore } from "src/stores/userStore";
+import { onMounted } from "vue";
 
 defineOptions({
   name: "MainLayout",
@@ -37,14 +38,15 @@ const linksList = [
     link: "/topics",
   },
 ];
+const userStore = useUserStore();
+const { currentUser } = storeToRefs(userStore);
+onMounted(async () => {
+  userStore.getCurrentUser();
+})
 
 const leftDrawerOpen = ref(false);
-const miniState = ref(true);
 const authStore = useAuthStore();
 const router = useRouter();
-
-const mainStore = useMainStore();
-const { model_name, models } = storeToRefs(mainStore);
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
@@ -95,6 +97,9 @@ const logoutDialog = ref(false);
             <q-avatar size="26px">
               <img src="https://cdn.quasar.dev/img/boy-avatar.png">
             </q-avatar>
+            <div class="ellipsis q-ml-sm" style="color: black;width: 50px">
+              {{ currentUser.username }}
+            </div>
             <q-menu auto-close>
               <q-list style="min-width: 150px">
                 <q-item clickable>
