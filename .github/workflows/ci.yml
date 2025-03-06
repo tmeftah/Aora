@@ -23,6 +23,11 @@ jobs:
           touch .env
           echo "DATABASE_PATH=chroma_db \n COLLECTION_NAME=langchain" >> .env
 
+      - name: DELETE-Start FastAPI app
+        run: |
+          cd backend
+          fastapi dev
+
       - name: Start FastAPI app
         run: |
           cd backend
