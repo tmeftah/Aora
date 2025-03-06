@@ -95,6 +95,19 @@ const logoutDialog = ref(false);
             <q-avatar size="26px">
               <img src="https://cdn.quasar.dev/img/boy-avatar.png">
             </q-avatar>
+            <q-menu auto-close>
+              <q-list style="min-width: 150px">
+                <q-item clickable>
+                  <q-item-section>Profile</q-item-section>
+                </q-item>
+                <q-item clickable>
+                  <q-item-section>Settings</q-item-section>
+                </q-item>
+                <q-item clickable>
+                  <q-item-section @click="logoutDialog = true">Logout</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
             <q-tooltip>Account</q-tooltip>
           </q-btn>
         </div>
