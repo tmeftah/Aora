@@ -30,5 +30,19 @@ export const useUserStore = defineStore("user", {
         );
       }
     },
+    async getAllUsers() {
+      try {
+        const responseData = await apiRequest(
+          "GET",
+          `/users`,
+          null,
+          authStore.token
+        );
+        this.users = responseData;
+      } catch (error) {
+        console.log("Error in Fetching Users", error.message);
+        showNotification("negative", "Users cannot be fecthed", "check_circle");
+      }
+    },
   },
 });
