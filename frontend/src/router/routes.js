@@ -13,6 +13,10 @@ const routes = [
         path: "topics",
         component: () => import("pages/TopicsPage.vue"),
       },
+      {
+        path: "profile",
+        component: () => import("pages/ProfilePage.vue"),
+      },
     ],
   },
   {

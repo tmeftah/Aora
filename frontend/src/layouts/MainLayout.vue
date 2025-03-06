@@ -19,19 +19,19 @@ const linksList = [
     link: "/",
   },
   {
-    title: "Ask a question",
+    title: "Aora AI",
     caption: "chat with docs",
     icon: "chat_bubble_outline",
     link: "/query",
   },
   {
-    title: "Alle Dokumente",
+    title: "All Documents",
     caption: "chat with docs",
     icon: "folder_open",
     link: "/documents",
   },
   {
-    title: "Alle Topics",
+    title: "All Topics",
     caption: "All topics",
     icon: "library_books",
     link: "/topics",
@@ -98,12 +98,21 @@ const logoutDialog = ref(false);
             <q-menu auto-close>
               <q-list style="min-width: 150px">
                 <q-item clickable>
-                  <q-item-section>Profile</q-item-section>
+                  <q-item-section avatar class="q-pa-sm">
+                    <q-icon name="person" />
+                  </q-item-section>
+                  <q-item-section @click="router.push('/profile')">Profile</q-item-section>
                 </q-item>
                 <q-item clickable>
+                  <q-item-section avatar>
+                    <q-icon name="settings" />
+                  </q-item-section>
                   <q-item-section>Settings</q-item-section>
                 </q-item>
                 <q-item clickable>
+                  <q-item-section avatar>
+                    <q-icon name="logout" />
+                  </q-item-section>
                   <q-item-section @click="logoutDialog = true">Logout</q-item-section>
                 </q-item>
               </q-list>
