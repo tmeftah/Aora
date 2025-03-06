@@ -1,15 +1,23 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useMainStore } from "../stores/mainStore";
-import { ref, onMounted } from "vue";
+import { useTopicStore } from '../stores/topicsStore';
+import { ref, onMounted, computed, watch } from "vue";
+import "../assets/css/base.css"
 
 defineOptions({
   name: "2Page",
 });
 
 const MainStore = useMainStore();
+const topicStore = useTopicStore();
+const { getAllTopics } = topicStore;
+const { topics } = storeToRefs(topicStore);
+const allTopics = computed(() => topics.value.map(topic => topic.name));
 const { loading, solution, question, model_name } = storeToRefs(MainStore);
 const models = ref([]);
+const selectedTopics = ref([]);
+const selectedValues = computed(() => Array.isArray(selectedTopics.value) ? selectedTopics.value : []);
 
 
 onMounted(async () => {
@@ -20,12 +28,14 @@ onMounted(async () => {
     console.error("Failed to load models:", error);
     models.value = [];
   }
+  getAllTopics();
 });
 
 async function getLLMResponse(question, model_name) {
   try {
     loading.value = true;
-    const response = await MainStore.askLLM(question, model_name);
+    const response = await MainStore.askLLM(question, model_name, selectedValues.value);
+
     console.log("Got response:", response);
   } catch (error) {
     console.error("Failed to get response:", error);
@@ -34,6 +44,7 @@ async function getLLMResponse(question, model_name) {
     loading.value = false;
   }
 }
+const greenModel = ref("Not Vectorized")
 </script>
 
 
@@ -47,7 +58,8 @@ async function getLLMResponse(question, model_name) {
 
       <q-card-section class="toolbar">
         <q-input @keydown.enter.prevent="getLLMResponse(question, model_name)" rounded outlined v-model="question"
-          placeholder="Ask anything..." type="text" :disable="models.length === 0" style="width: 50%;;">
+          placeholder="Ask anything..." type="text" :disable="models.length === 0" style="width: 50%;">
+
           <template v-slot:prepend>
             <q-icon name="search" class="q-mr-sm" @click="getLLMResponse(question, model_name)" />
 
@@ -59,7 +71,16 @@ async function getLLMResponse(question, model_name) {
           </template>
         </q-input>
 
-        <q-select dense options-dense outlined v-model="model_name" :options="models" label="Model" class="model-select"
+        <!-- <q-toggle false-value="Not Vectorized" :label="`${greenModel}`" true-value="Vectorized" color="green"
+          v-model="greenModel" /> -->
+
+        <q-select style="min-width: 250px; max-width: 300px" dense options-dense outlined v-model="selectedTopics"
+          multiple :options="allTopics" use-chips stack-label label="Select Topics" required />
+
+
+        <q-select style="min-width: 250px; max-width: 300px" dense options-dense outlined v-model="model_name"
+          :options="models" label="Model" class="model-select"
+
           @update:model-value="(val) => MainStore.set_model_name(val)">
           <template v-slot:append v-if="models.length === 0">
             <q-icon name="warning" color="red">
@@ -88,68 +109,3 @@ async function getLLMResponse(question, model_name) {
 
 </template>
 
-<style scoped>
-.model-select {
-  min-width: 150px;
-  max-width: 200px;
-}
-
-.full-page {
-  width: 100%;
-  height: 70vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.full-card {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-}
-
-.search-bar {
-  width: 40%;
-}
-
-.table-container {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-bottom: 10px;
-}
-
-.responsive-table {
-  font-size: 18px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-}
-
-.q-table tbody tr:nth-child(odd) {
-  background-color: #f5faff;
-}
-
-.q-table tbody tr:hover {
-  background-color: #e3f2fd !important;
-}
-
-.text-dark {
-  color: #1a237e;
-}
-
-.text-body2 {
-  font-size: 14px;
-}
-</style>

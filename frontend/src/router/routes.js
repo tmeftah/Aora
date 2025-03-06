@@ -3,7 +3,7 @@ const routes = [
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
     children: [
-      { path: "", component: () => import("src/pages/DasboardPage.vue") },
+      { path: "", component: () => import("src/pages/comingSoonPage.vue") },
       { path: "query", component: () => import("pages/QueryPage.vue") },
       {
         path: "documents",
@@ -12,6 +12,14 @@ const routes = [
       {
         path: "topics",
         component: () => import("pages/TopicsPage.vue"),
+      },
+      {
+        path: "profile",
+        component: () => import("pages/ProfilePage.vue"),
+      },
+      {
+        path: "settings",
+        component: () => import("pages/comingSoonPage.vue"),
       },
     ],
   },

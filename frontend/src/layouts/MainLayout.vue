@@ -2,10 +2,11 @@
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "../stores/auth";
-import { useMainStore } from "src/stores/mainStore";
 import { useRouter } from "vue-router";
 import { Notify } from "quasar";
 import EssentialLink from "components/EssentialLink.vue";
+import { useUserStore } from "src/stores/userStore";
+import { onMounted } from "vue";
 
 defineOptions({
   name: "MainLayout",
@@ -19,32 +20,48 @@ const linksList = [
     link: "/",
   },
   {
-    title: "Ask a question",
+    title: "Aora AI",
     caption: "chat with docs",
     icon: "chat_bubble_outline",
     link: "/query",
   },
   {
-    title: "Alle Dokumente",
+    title: "All Documents",
     caption: "chat with docs",
     icon: "folder_open",
     link: "/documents",
   },
   {
-    title: "Alle Topics",
+    title: "All Topics",
     caption: "All topics",
     icon: "library_books",
     link: "/topics",
   },
 ];
+const adminList = [
+  {
+    title: "Profile",
+    caption: "chat with docs",
+    icon: "person",
+    link: "/profile",
+  },
+  {
+    title: "Settings",
+    caption: "chat with docs",
+    icon: "settings",
+    link: "/settings",
+  },
+
+];
+const userStore = useUserStore();
+const { currentUser } = storeToRefs(userStore);
+onMounted(async () => {
+  userStore.getCurrentUser();
+})
 
 const leftDrawerOpen = ref(false);
-const miniState = ref(true);
 const authStore = useAuthStore();
 const router = useRouter();
-
-const mainStore = useMainStore();
-const { model_name, models } = storeToRefs(mainStore);
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
@@ -73,30 +90,71 @@ const logoutDialog = ref(false);
 
 
 <template>
-  <q-layout view="hHh lpR fFf">
-    <q-header dark bordered class="bg-white text-grey-8">
+  <q-layout view="hHh lpR fFf" class="bg-grey-1">
+    <q-header elevated class="bg-white text-grey-4 q-py-xs" height-hint="58">
       <q-toolbar>
-        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+        <q-btn dense flat round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title class="text-bold text-weight-bolder text-h3" style="color: #507295">
-          Aora.
-        </q-toolbar-title>
+        <q-btn flat no-caps no-wrap class="q-ml-xs" v-if="$q.screen.gt.xs">
+          <q-toolbar-title class="text-bold text-weight-bolder text-h4" style="color: #507295">
+            Aora.
+          </q-toolbar-title>
+        </q-btn>
+        <q-space />
+
         <!-- Orion Inova -->
-        <q-btn flat round icon="logout" class="q-mr-xs" @click="logoutDialog = true" />
+        <div class="q-gutter-sm row items-center no-wrap">
+
+          <q-btn round dense flat color="grey-8" icon="apps" v-if="$q.screen.gt.sm">
+            <q-tooltip>Apps</q-tooltip>
+          </q-btn>
+          <q-btn round flat>
+            <q-avatar size="26px">
+              <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+            </q-avatar>
+            <div class="ellipsis q-ml-sm" style="color: black;width: 50px">
+              {{ currentUser.username }}
+            </div>
+            <q-menu auto-close>
+              <q-list style="min-width: 150px">
+                <q-item clickable>
+                  <q-item-section avatar class="q-pa-sm">
+                    <q-icon name="person" />
+                  </q-item-section>
+                  <q-item-section @click="router.push('/profile')">Profile</q-item-section>
+                </q-item>
+                <q-item clickable>
+                  <q-item-section avatar>
+                    <q-icon name="settings" />
+                  </q-item-section>
+                  <q-item-section @click="router.push('/settings')">Settings</q-item-section>
+                </q-item>
+                <q-item clickable>
+                  <q-item-section avatar>
+                    <q-icon name="logout" />
+                  </q-item-section>
+                  <q-item-section @click="logoutDialog = true">Logout</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+            <q-tooltip>Account</q-tooltip>
+          </q-btn>
+        </div>
+        <q-btn flat round icon="logout" color="grey-8" class="q-mr-xs" @click="logoutDialog = true" />
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered :width="220">
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="bg-white-2" :width="240">
       <q-list>
         <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>
 
       <q-separator />
-      <!-- <div class="q-ma-sm fixed-bottom">
-        <q-select transition-show="flip-up" transition-hide="flip-down" dense options-dense outlined
-          v-model="model_name" :options="models" label="Model"
-          @update:model-value="(val) => mainStore.set_model_name(val)" />
-      </div> -->
+
+      <q-list v-if="currentUser.username === 'admin'">
+        <EssentialLink v-for="link in adminList" :key="link.title" v-bind="link" />
+      </q-list>
+
     </q-drawer>
 
     <q-page-container>

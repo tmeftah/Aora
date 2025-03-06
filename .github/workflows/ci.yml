@@ -23,12 +23,13 @@ jobs:
           touch .env
           echo "DATABASE_PATH=chroma_db \n COLLECTION_NAME=langchain" >> .env
 
+
       - name: Start FastAPI app
         run: |
           cd backend
           nohup fastapi dev > /dev/null 2>&1 &
           echo $! > uvicorn.pid
-          sleep 10
+          sleep 20
           echo "Aora-API is running"
 
       - name: Check FastAPI /health endpoint
