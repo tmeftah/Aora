@@ -38,6 +38,21 @@ const linksList = [
     link: "/topics",
   },
 ];
+const adminList = [
+  {
+    title: "Profile",
+    caption: "chat with docs",
+    icon: "person",
+    link: "/profile",
+  },
+  {
+    title: "Settings",
+    caption: "chat with docs",
+    icon: "settings",
+    link: "/settings",
+  },
+
+];
 const userStore = useUserStore();
 const { currentUser } = storeToRefs(userStore);
 onMounted(async () => {
@@ -112,7 +127,7 @@ const logoutDialog = ref(false);
                   <q-item-section avatar>
                     <q-icon name="settings" />
                   </q-item-section>
-                  <q-item-section>Settings</q-item-section>
+                  <q-item-section @click="router.push('/settings')">Settings</q-item-section>
                 </q-item>
                 <q-item clickable>
                   <q-item-section avatar>
@@ -135,6 +150,10 @@ const logoutDialog = ref(false);
       </q-list>
 
       <q-separator />
+
+      <q-list v-if="currentUser.username === 'admin'">
+        <EssentialLink v-for="link in adminList" :key="link.title" v-bind="link" />
+      </q-list>
 
     </q-drawer>
 
