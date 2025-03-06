@@ -1,0 +1,4 @@
+**/__pycache__
+**/.patest_cache
+.venv
+aora.db

@@ -1,0 +1,28 @@
+version: '3.3'
+
+networks:
+  aora_network:
+    driver: bridge
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: aora_backend
+    ports:
+      - "8000:8000"
+    networks:
+      - aora_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: aora_frontend
+    ports:
+      - "9000:9000"
+    networks:
+      - aora_network
+    depends_on:
+      - backend

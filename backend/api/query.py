@@ -1,33 +1,59 @@
 from fastapi import APIRouter
-from fastapi.responses import StreamingResponse
+from fastapi import Depends
+from fastapi import HTTPException
+from fastapi import Query
 
-from backend.rag_llms_langchain import chain
-from backend.embeddings.ingest import get_vectorstore
-
-import json
-import uuid
-
-
-query_router = APIRouter()
+from backend.exceptions import ModelsNotRetrievedException
+from backend.exceptions import NoValidPermissionsException
+from backend.service.oauth import get_current_user
+from backend.service.query_service import model_list
+from backend.service.query_service import query_service
+from typing import List
 
 
-@query_router.get("/query")
-async def query(query: str):
-    # if current_user.role < 5:
-    #     raise HTTPException(status_code=403,
-    # detail="Only admin users can delete other users")
-    store = get_vectorstore()
-    docs = store.invoke(query)
+query_router = APIRouter(
+    prefix="/query",
+    tags=["Query"],
+    responses={
+        200: {"description": "Success"},
+        404: {"description": "Resource Not Found"},
+        500: {"description": "Internal Server Error"},
+    },
+)
 
-    print(20 * "*", "docs", 20 * "*", "\n", docs)
 
-    async def stream_generator():
-        # Use the LangChain model to generate text
-        print(20 * "*", "\n", query)
-        async for text in chain.astream({"input": query, "context": docs}):
-            yield json.dumps({"event_id": str(uuid.uuid4()), "data": text})
+@query_router.get("/", dependencies=[Depends(get_current_user)])
+async def query(query: str = Query(..., description="User query"),
+                model_name: str = Query(..., description="Model to use"),
+                topics: List[str] = Query([], description="List of topics")
+                ):
+    """
+    Handle query requests from user and
+    return appropriate response
+    """
+    try:
+        topics = topics[0].split(",") if len(
+            topics) == 1 and "," in topics[0] else topics
+        response = await query_service(query=query, model_name=model_name, topics=topics)
 
-        # TODO  here we have to add the metadata/source
+        return response
+    except NoValidPermissionsException as e:
+        raise HTTPException(status_code=403, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-    return StreamingResponse(stream_generator(), 
-                            media_type="application/x-ndjson")
+
+@query_router.get("/list_models", dependencies=[Depends(get_current_user)])
+async def get_downloaded_models():
+    """Get all downloaded ollama models"""
+    try:
+        return await model_list()
+
+    except ModelsNotRetrievedException as e:
+        raise HTTPException(
+            status_code=404, detail=f"Failed to retrieve models {e}"
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"An error occurred: {str(e)}"
+        )
