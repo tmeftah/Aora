@@ -21,19 +21,19 @@ const linksList = [
   },
   {
     title: "Aora AI",
-    caption: "chat with docs",
+    caption: "Chat with your docs",
     icon: "chat_bubble_outline",
     link: "/query",
   },
   {
     title: "All Documents",
-    caption: "chat with docs",
+    caption: "All added documents",
     icon: "folder_open",
     link: "/documents",
   },
   {
     title: "All Topics",
-    caption: "All topics",
+    caption: "Topics of documents",
     icon: "library_books",
     link: "/topics",
   },
@@ -41,13 +41,19 @@ const linksList = [
 const adminList = [
   {
     title: "Profile",
-    caption: "chat with docs",
+    caption: "User profile",
     icon: "person",
     link: "/profile",
   },
   {
+    title: "Admin Access",
+    caption: "Admin controls",
+    icon: "security",
+    link: "/admin",
+  },
+  {
     title: "Settings",
-    caption: "chat with docs",
+    caption: "Application settings",
     icon: "settings",
     link: "/settings",
   },
