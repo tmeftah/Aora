@@ -42,13 +42,6 @@ const columns = [
     sortable: true,
   },
   {
-    name: "status",
-    align: "center",
-    label: "Status",
-    field: "status",
-    sortable: true,
-  },
-  {
     name: "topic_id",
     align: "center",
     label: "Topic ID",
@@ -56,10 +49,18 @@ const columns = [
     sortable: true,
   },
   {
+    name: "status",
+    align: "center",
+    label: "Status",
+    field: (row) => (row.vectorized ? "Vectorized" : "On Progress"),
+    sortable: true,
+  },
+  {
     name: "vectorized",
     align: "center",
     label: "vectorized",
     field: "vectorized",
+    format: (val) => (val ? "☑️" : "❌"),
     sortable: true,
   },
   {
@@ -207,6 +208,7 @@ const confirmDeletionText = computed(() => {
             <q-chip>{{ props.value }}</q-chip>
           </q-td>
         </template>
+
 
         <template v-slot:body-cell-details="props">
           <q-td :props="props">
