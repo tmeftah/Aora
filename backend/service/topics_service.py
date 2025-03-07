@@ -2,10 +2,10 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
-from backend.models.pydantic_models import TopicPydantic
-from backend.models.sqlalchemy_models import Topic
 from backend.exceptions import DuplicateTopicException
 from backend.exceptions import NoTopicFoundException
+from backend.models.pydantic_models import TopicPydantic
+from backend.models.sqlalchemy_models import Topic
 
 
 def get_all_topics(db: Session) -> List[TopicPydantic]:

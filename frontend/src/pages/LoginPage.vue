@@ -44,7 +44,7 @@ async function submitLoginForm() {
 
 <template>
   <div class="row justify-center">
-    <q-card class="col-sm-5 bg-light-blue-13 xs-hide no-shadow" square bordered id="leftcard">
+    <q-card class="col-sm-5 xs-hide no-shadow" square bordered id="leftcard" style="background-color:#075070">
       <div class="row q-px-xl q-pb-xl full-height content-center">
         <div class="text-h4 text-uppercase text-white">
           <span class="text-weight-bolder">Aora.</span>
@@ -62,11 +62,11 @@ async function submitLoginForm() {
         <div class="col-12">
           <q-card-section>
             <div class="q-mb-xl">
-              <div class="flex justify-center text-h4 text-uppercase q-my-none text-weight-bold text-light-blue-13">
-                <span class="gt-xs">Login</span>
+              <div class="flex justify-center text-h4 text-uppercase q-my-none text-weight-bold" style="color:#075070">
+                <!-- <span class="gt-xs">Login</span> -->
                 <span class="lt-sm">Aora. </span>
               </div>
-              <p class="text-caption text-weight-bold lt-sm flex justify-center text-light-blue-13">
+              <p class="text-caption text-weight-bold lt-sm flex justify-center " style="color:#075070">
                 Ahead Of Rest, Always.
               </p>
             </div>
@@ -83,7 +83,7 @@ async function submitLoginForm() {
               </q-input>
 
               <div>
-                <q-btn class="full-width" color="light-blue-13" label="Login" rounded type="submit" />
+                <q-btn class="full-width" label="Login" rounded type="submit" style="color:#075070" />
               </div>
             </q-form>
           </q-card-section>

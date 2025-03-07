@@ -1,6 +1,9 @@
+from datetime import date
+from datetime import datetime
 from typing import Optional
-from datetime import date, datetime
-from pydantic import BaseModel, ConfigDict
+
+from pydantic import BaseModel
+from pydantic import ConfigDict
 
 
 class Token(BaseModel):
