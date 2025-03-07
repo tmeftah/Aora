@@ -53,7 +53,7 @@ const greenModel = ref("Not Vectorized")
   <q-page class="full-page">
     <q-card flat bordered class="full-card">
       <q-card-section class="text-black">
-        <div class="text-h4 text-bold">🔮Aora-AI </div>
+        <div class="text-h4 text-bold" style="color:#075070">🔮Aora-AI </div>
       </q-card-section>
 
       <q-card-section class="toolbar">
@@ -80,7 +80,6 @@ const greenModel = ref("Not Vectorized")
 
         <q-select style="min-width: 250px; max-width: 300px" dense options-dense outlined v-model="model_name"
           :options="models" label="Model" class="model-select"
-
           @update:model-value="(val) => MainStore.set_model_name(val)">
           <template v-slot:append v-if="models.length === 0">
             <q-icon name="warning" color="red">
@@ -108,4 +107,3 @@ const greenModel = ref("Not Vectorized")
   </q-page>
 
 </template>
-

@@ -93,7 +93,7 @@ const logoutDialog = ref(false);
   <q-layout view="hHh lpR fFf" class="bg-grey-1">
     <q-header elevated class="bg-white text-grey-4 q-py-xs" height-hint="58">
       <q-toolbar>
-        <q-btn dense flat round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+        <q-btn dense flat round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" style="color:#075070" />
 
         <q-btn flat no-caps no-wrap class="q-ml-xs" v-if="$q.screen.gt.xs">
           <q-toolbar-title class="text-bold text-weight-bolder text-h4" style="color: #075070">
@@ -105,14 +105,14 @@ const logoutDialog = ref(false);
         <!-- Orion Inova -->
         <div class="q-gutter-sm row items-center no-wrap">
 
-          <q-btn round dense flat color="grey-8" icon="apps" v-if="$q.screen.gt.sm">
+          <q-btn round dense flat icon="apps" v-if="$q.screen.gt.sm" style="color:#075070">
             <q-tooltip>Apps</q-tooltip>
           </q-btn>
           <q-btn round flat>
             <q-avatar size="26px">
               <img src="https://cdn.quasar.dev/img/boy-avatar.png">
             </q-avatar>
-            <div class="ellipsis q-ml-sm" style="color: black;width: 50px">
+            <div class="ellipsis q-ml-sm" style="color: #075070;width: 50px">
               {{ currentUser.username }}
             </div>
             <q-menu auto-close>
@@ -140,11 +140,12 @@ const logoutDialog = ref(false);
             <q-tooltip>Account</q-tooltip>
           </q-btn>
         </div>
-        <q-btn flat round icon="logout" color="grey-8" class="q-mr-xs" @click="logoutDialog = true" />
+        <q-btn flat round icon="logout" color="grey-8" class="q-mr-xs" @click="logoutDialog = true"
+          style="color:#075070" />
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="bg-white-2" :width="240">
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered :width="240">
       <q-list>
         <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>

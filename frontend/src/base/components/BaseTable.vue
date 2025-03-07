@@ -17,7 +17,7 @@ const filter = ref("");
   <q-page class="full-page">
     <q-card flat bordered class="full-card">
       <q-card-section class="text-black">
-        <div class="text-h4 text-bold">{{ title }}</div>
+        <div class="text-h4 text-bold" style="color:#075070">{{ title }}</div>
       </q-card-section>
 
       <q-card-section class="toolbar">
