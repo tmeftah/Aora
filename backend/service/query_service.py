@@ -9,6 +9,7 @@ from sentence_transformers import SentenceTransformer
 from backend.exceptions import ModelsNotRetrievedException
 
 
+
 # === CONFIGURATION ===
 chroma_client = chromadb.PersistentClient(path="./chroma_db")
 collection = chroma_client.get_or_create_collection(name="documents")
@@ -61,6 +62,7 @@ async def query_service(query: str, model_name: str, topics: List[str]):
 
         context = "\n".join(relevant_chunks)
 
+
         data = {
             "messages": [
                 {
@@ -105,6 +107,7 @@ async def model_list() -> list:
 
     try:
 
+
         api_key = os.getenv("LLM_API_KEY")
 
         if not api_key:
@@ -121,12 +124,11 @@ async def model_list() -> list:
         if response.status_code == 200:
             data = response.json()
             # print(data)
+
             model_names = [model["id"] for model in data.get("data", [])]
             return model_names
         else:
-            print(
-                f"Failed to fetch models: {response.status_code}, {response.text}"
-            )
+            print(f"Failed to fetch models: {response.status_code}, {response.text}")
             return []
 
     except Exception as e:

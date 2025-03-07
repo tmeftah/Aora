@@ -35,6 +35,7 @@ async function getLLMResponse(question, model_name) {
   try {
     loading.value = true;
     const response = await MainStore.askLLM(question, model_name, selectedValues.value);
+
     console.log("Got response:", response);
   } catch (error) {
     console.error("Failed to get response:", error);
@@ -58,6 +59,7 @@ const greenModel = ref("Not Vectorized")
       <q-card-section class="toolbar">
         <q-input @keydown.enter.prevent="getLLMResponse(question, model_name)" rounded outlined v-model="question"
           placeholder="Ask anything..." type="text" :disable="models.length === 0" style="width: 50%;">
+
           <template v-slot:prepend>
             <q-icon name="search" class="q-mr-sm" @click="getLLMResponse(question, model_name)" />
 
@@ -68,6 +70,7 @@ const greenModel = ref("Not Vectorized")
             </q-avatar>
           </template>
         </q-input>
+
         <!-- <q-toggle false-value="Not Vectorized" :label="`${greenModel}`" true-value="Vectorized" color="green"
           v-model="greenModel" /> -->
 
@@ -77,6 +80,7 @@ const greenModel = ref("Not Vectorized")
 
         <q-select style="min-width: 250px; max-width: 300px" dense options-dense outlined v-model="model_name"
           :options="models" label="Model" class="model-select"
+
           @update:model-value="(val) => MainStore.set_model_name(val)">
           <template v-slot:append v-if="models.length === 0">
             <q-icon name="warning" color="red">
@@ -104,3 +108,4 @@ const greenModel = ref("Not Vectorized")
   </q-page>
 
 </template>
+

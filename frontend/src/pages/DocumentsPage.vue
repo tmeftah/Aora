@@ -144,6 +144,7 @@ const openDialog = async () => {
   isLoadingTopics.value = false;
   if (topics.value.length === 0) {
     showNotification("negative", "Please kindly add some topics before uploading any documents.", "report_problem");
+
     return;
   }
   showDialog.value = true;
