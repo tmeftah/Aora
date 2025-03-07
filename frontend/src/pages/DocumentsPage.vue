@@ -56,6 +56,13 @@ const columns = [
     sortable: true,
   },
   {
+    name: "vectorized",
+    align: "center",
+    label: "vectorized",
+    field: "vectorized",
+    sortable: true,
+  },
+  {
     name: "actions",
     label: "Actions",
     align: "left",
