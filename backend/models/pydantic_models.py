@@ -28,6 +28,7 @@ class DocumentPydantic(BaseModel):
     status: str
     created_at: datetime
     topic_id: int
+    vectorized: bool
 
 
 class TopicPydantic(BaseModel):
