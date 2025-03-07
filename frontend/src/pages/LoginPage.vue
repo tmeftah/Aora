@@ -47,7 +47,11 @@ async function submitLoginForm() {
     <q-card class="col-sm-5 xs-hide no-shadow" square bordered id="leftcard" style="background-color:#075070">
       <div class="row q-px-xl q-pb-xl full-height content-center">
         <div class="text-h4 text-uppercase text-white">
-          <span class="text-weight-bolder">Aora.</span>
+
+          <span class="text-weight-bolder">
+            Aora.
+          </span>
+          <q-img src="./../assets/aora-logo.png" alt="Aora Logo" width="20px" height="30px" class="q-mb-none" />
 
           <p class="text-caption text-weight-bold">Ahead Of Rest, Always.</p>
         </div>
@@ -64,6 +68,7 @@ async function submitLoginForm() {
             <div class="q-mb-xl">
               <div class="flex justify-center text-h4 text-uppercase q-my-none text-weight-bold" style="color:#075070">
                 <!-- <span class="gt-xs">Login</span> -->
+
                 <span class="lt-sm">Aora. </span>
               </div>
               <p class="text-caption text-weight-bold lt-sm flex justify-center " style="color:#075070">

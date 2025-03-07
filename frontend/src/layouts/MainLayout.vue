@@ -106,6 +106,7 @@ const logoutDialog = ref(false);
         <q-btn flat no-caps no-wrap class="q-ml-xs" v-if="$q.screen.gt.xs">
           <q-toolbar-title class="text-bold text-weight-bolder text-h4" style="color: #075070">
             Aora.
+            <q-img src="./../assets/aora-logo.png" alt="Aora Logo" width="20px" height="30px" class="q-mb-none" />
           </q-toolbar-title>
         </q-btn>
         <q-space />
