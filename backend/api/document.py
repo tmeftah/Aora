@@ -8,9 +8,9 @@ from sqlalchemy.orm import Session
 from backend.db.sessions import get_db
 from backend.exceptions import NoDocumentsFoundException
 from backend.models.sqlalchemy_models import User
+from backend.service.document_service import delete_document
 from backend.service.document_service import document_list
 from backend.service.document_service import save_document
-from backend.service.document_service import delete_document
 from backend.service.oauth import get_current_user
 
 # from fastapi.responses import JSONResponse
@@ -66,7 +66,9 @@ def list_documents(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@document_router.delete("/{document_name}", dependencies=[Depends(get_current_user)])
+@document_router.delete(
+    "/{document_name}", dependencies=[Depends(get_current_user)]
+)
 async def delete_topic(
     document_name: str,
     db: Session = Depends(get_db),

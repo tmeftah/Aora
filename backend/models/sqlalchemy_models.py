@@ -1,10 +1,10 @@
+import datetime
 
 from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
 from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey
-import datetime
+from sqlalchemy import Integer
+from sqlalchemy import String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -46,5 +46,4 @@ class Topic(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
 
-    documents = relationship(
-        "Documents", back_populates="topic")
+    documents = relationship("Documents", back_populates="topic")

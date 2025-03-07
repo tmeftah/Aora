@@ -13,7 +13,9 @@ from backend.service.topics_service import get_topic_by_name
 documents_directory = os.getenv("DOCUMENTS_DIRECTORY", "documents/")
 
 
-def save_document(topic_name: str, file: File, db: Session) -> DocumentPydantic:
+def save_document(
+    topic_name: str, file: File, db: Session
+) -> DocumentPydantic:
     """Gets the uploaded document, saves the document
     in the docs folder and creates a hash of the document
     and saves it in db"""
@@ -36,7 +38,7 @@ def save_document(topic_name: str, file: File, db: Session) -> DocumentPydantic:
         filehash=file_hash,
         status="on progress",
         content_type=file.content_type,
-        topic_id=topic.id
+        topic_id=topic.id,
     )
     db.add(new_document)
     db.commit()
@@ -86,9 +88,4 @@ def document_list(db: Session) -> List[DocumentPydantic]:
     if not documents:
         raise NoDocumentsFoundException()
 
-    return [
-        DocumentPydantic.model_validate(
-            doc
-        )
-        for doc in documents
-    ]
+    return [DocumentPydantic.model_validate(doc) for doc in documents]

@@ -1,10 +1,11 @@
-import os
-import json
 import hashlib
+import json
+import os
+import time
+
 import chromadb
 from pypdf import PdfReader
 from sentence_transformers import SentenceTransformer
-import time
 
 # === CONFIGURATION ===
 DOCUMENTS_FOLDER = "documents/"
@@ -22,7 +23,7 @@ embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 def load_json(file_path):
     """Load JSON data from a file."""
     if os.path.exists(file_path):
-        with open(file_path, "r") as file:
+        with open(file_path) as file:
             return json.load(file)
     return {}
 
@@ -41,13 +42,18 @@ def compute_document_hash(text):
 def extract_text_from_pdf(pdf_path):
     """Extract text from a PDF file."""
     reader = PdfReader(pdf_path)
-    return "\n".join([page.extract_text() for page in reader.pages if page.extract_text()]).strip()
+    return "\n".join(
+        [page.extract_text() for page in reader.pages if page.extract_text()]
+    ).strip()
 
 
 def chunk_text(text, chunk_size=500):
     """Split text into smaller chunks for efficient vector storage."""
     words = text.split()
-    return [" ".join(words[i:i + chunk_size]) for i in range(0, len(words), chunk_size)]
+    return [
+        " ".join(words[i : i + chunk_size])
+        for i in range(0, len(words), chunk_size)
+    ]
 
 
 def get_embedding(text):
@@ -85,7 +91,7 @@ def process_document(pdf_path, topic):
             ids=[f"{pdf_path}_{i}"],
             documents=[chunk],
             embeddings=[embedding],
-            metadatas=[{"document_id": pdf_path, "topic": topic}]
+            metadatas=[{"document_id": pdf_path, "topic": topic}],
         )
 
     # Update cache with new document hash
@@ -93,7 +99,8 @@ def process_document(pdf_path, topic):
     save_json(CACHE_FILE, document_cache)
 
     print(
-        f"✅ Indexed {len(chunks)} chunks from {pdf_path} under topic: {topic}")
+        f"✅ Indexed {len(chunks)} chunks from {pdf_path} under topic: {topic}"
+    )
 
 
 def remove_deleted_files():
@@ -102,8 +109,9 @@ def remove_deleted_files():
     topics = load_json(TOPIC_FILE)
 
     existing_files = set(os.listdir(DOCUMENTS_FOLDER))
-    deleted_files = [file for file in document_cache.keys()
-                     if file not in existing_files]
+    deleted_files = [
+        file for file in document_cache.keys() if file not in existing_files
+    ]
 
     for deleted_file in deleted_files:
         print(f"🗑️ Removing deleted document: {deleted_file} from ChromaDB...")

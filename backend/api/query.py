@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
@@ -8,7 +10,6 @@ from backend.exceptions import NoValidPermissionsException
 from backend.service.oauth import get_current_user
 from backend.service.query_service import model_list
 from backend.service.query_service import query_service
-from typing import List
 
 
 query_router = APIRouter(
@@ -23,18 +24,24 @@ query_router = APIRouter(
 
 
 @query_router.get("/", dependencies=[Depends(get_current_user)])
-async def query(query: str = Query(..., description="User query"),
-                model_name: str = Query(..., description="Model to use"),
-                topics: List[str] = Query([], description="List of topics")
-                ):
+async def query(
+    query: str = Query(..., description="User query"),
+    model_name: str = Query(..., description="Model to use"),
+    topics: List[str] = Query([], description="List of topics"),
+):
     """
     Handle query requests from user and
     return appropriate response
     """
     try:
-        topics = topics[0].split(",") if len(
-            topics) == 1 and "," in topics[0] else topics
-        response = await query_service(query=query, model_name=model_name, topics=topics)
+        topics = (
+            topics[0].split(",")
+            if len(topics) == 1 and "," in topics[0]
+            else topics
+        )
+        response = await query_service(
+            query=query, model_name=model_name, topics=topics
+        )
 
         return response
     except NoValidPermissionsException as e:

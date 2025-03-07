@@ -4,14 +4,14 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from backend.db.sessions import get_db
-from backend.service.oauth import get_current_user
-from backend.service.topics_service import get_all_topics
-from backend.service.topics_service import created_topic
-from backend.service.topics_service import update_topic
-from backend.service.topics_service import delete_topic_details
-from backend.service.topics_service import get_topic_by_name
 from backend.exceptions import DuplicateUserException
 from backend.exceptions import NoTopicFoundException
+from backend.service.oauth import get_current_user
+from backend.service.topics_service import created_topic
+from backend.service.topics_service import delete_topic_details
+from backend.service.topics_service import get_all_topics
+from backend.service.topics_service import get_topic_by_name
+from backend.service.topics_service import update_topic
 
 
 topic_router = APIRouter(
@@ -42,9 +42,10 @@ async def get_topics(
 
 
 @topic_router.get("/{topic_name}", dependencies=[Depends(get_current_user)])
-async def get_topic_id(topic_name: str,
-                       db: Session = Depends(get_db),
-                       ):
+async def get_topic_id(
+    topic_name: str,
+    db: Session = Depends(get_db),
+):
     """Get all topics by name"""
 
     try:
