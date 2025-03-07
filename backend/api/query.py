@@ -10,6 +10,8 @@ from backend.exceptions import NoValidPermissionsException
 from backend.service.oauth import get_current_user
 from backend.service.query_service import model_list
 from backend.service.query_service import query_service
+from typing import List
+
 
 
 query_router = APIRouter(
@@ -29,6 +31,7 @@ async def query(
     model_name: str = Query(..., description="Model to use"),
     topics: List[str] = Query([], description="List of topics"),
 ):
+
     """
     Handle query requests from user and
     return appropriate response

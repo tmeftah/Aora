@@ -7,6 +7,7 @@ import chromadb
 from pypdf import PdfReader
 from sentence_transformers import SentenceTransformer
 
+
 # === CONFIGURATION ===
 DOCUMENTS_FOLDER = "documents/"
 CACHE_FILE = "document_cache.json"
@@ -24,6 +25,7 @@ def load_json(file_path):
     """Load JSON data from a file."""
     if os.path.exists(file_path):
         with open(file_path) as file:
+
             return json.load(file)
     return {}
 
@@ -92,7 +94,6 @@ def process_document(pdf_path, topic):
             documents=[chunk],
             embeddings=[embedding],
             metadatas=[{"document_id": pdf_path, "topic": topic}],
-        )
 
     # Update cache with new document hash
     document_cache[pdf_path] = doc_hash

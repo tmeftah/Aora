@@ -22,12 +22,14 @@ const linksList = [
   {
     title: "Aora AI",
     caption: "Chat with your docs",
+
     icon: "chat_bubble_outline",
     link: "/query",
   },
   {
     title: "All Documents",
     caption: "All added documents",
+
     icon: "folder_open",
     link: "/documents",
   },
@@ -112,6 +114,7 @@ const logoutDialog = ref(false);
         <div class="q-gutter-sm row items-center no-wrap">
 
           <q-btn round dense flat icon="apps" v-if="$q.screen.gt.sm" style="color:#075070">
+
             <q-tooltip>Apps</q-tooltip>
           </q-btn>
           <q-btn round flat>
@@ -152,6 +155,7 @@ const logoutDialog = ref(false);
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered :width="240">
+
       <q-list>
         <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>
