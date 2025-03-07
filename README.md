@@ -136,7 +136,7 @@ To create a vector datastore of your documents, you need follow this steps:
 ```bash
 cd backend/embeddings
 
-python ingest.py # create embeddings.
+python vectorize.py # create embeddings.
 
 ```
 
