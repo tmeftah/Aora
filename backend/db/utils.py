@@ -2,6 +2,7 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from backend.db.sessions import get_db
+
 from backend.models.sqlalchemy_models import User, Topic
 from backend.service.oauth import encrypt_password
 from backend.service.oauth import get_user_by_name

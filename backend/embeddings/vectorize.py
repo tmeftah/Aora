@@ -95,6 +95,7 @@ def process_document(pdf_path, topic):
             embeddings=[embedding],
             metadatas=[{"document_id": pdf_path, "topic": topic}]),
 
+
     # Update cache with new document hash
     document_cache[pdf_path] = doc_hash
     save_json(CACHE_FILE, document_cache)
