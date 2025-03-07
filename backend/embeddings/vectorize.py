@@ -53,7 +53,7 @@ def chunk_text(text, chunk_size=500):
     """Split text into smaller chunks for efficient vector storage."""
     words = text.split()
     return [
-        " ".join(words[i : i + chunk_size])
+        " ".join(words[i: i + chunk_size])
         for i in range(0, len(words), chunk_size)
     ]
 
@@ -93,7 +93,7 @@ def process_document(pdf_path, topic):
             ids=[f"{pdf_path}_{i}"],
             documents=[chunk],
             embeddings=[embedding],
-            metadatas=[{"document_id": pdf_path, "topic": topic}],
+            metadatas=[{"document_id": pdf_path, "topic": topic}]),
 
     # Update cache with new document hash
     document_cache[pdf_path] = doc_hash
