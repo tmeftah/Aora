@@ -7,6 +7,7 @@ import requests
 from sentence_transformers import SentenceTransformer
 
 from backend.exceptions import ModelsNotRetrievedException
+from typing import List
 
 
 
@@ -33,7 +34,6 @@ def retrieve_relevant_chunks(query: str, topics: List[str]):
         if "documents" in results and results["documents"]
         else []
     )
-
 
 async def query_service(query: str, model_name: str, topics: List[str]):
     """
