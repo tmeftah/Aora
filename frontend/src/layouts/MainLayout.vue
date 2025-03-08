@@ -175,18 +175,22 @@ const logoutDialog = ref(false);
 
     <!-- Logout Confirmation Dialog -->
     <q-dialog :backdrop-filter="60" v-model="logoutDialog">
+
       <q-card style="width: 700px; max-width: 80vw;">
-        <q-card-section class="row items-center q-pb-none text-h6">
-          <q-icon name="warning" color="warning" size="2rem" class="q-mr-sm" />
-          <span class="text-h6">Logout?</span>
+        <q-card-section class="row items-center text-white" style="background-color: #075070;">
+          <q-icon name="logout" icon="logout" color="red" size="2rem" class="q-mr-sm" />
+          <div class="text-h5 text-bold">Logout</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
+        <q-separator />
 
-        <q-card-section>
-          Are you sure you want to Logout??
+        <q-card-section style="max-height: 50vh">
+          <div class="text-h6">Are you sure you want to Logout?</div>
         </q-card-section>
-
+        
         <q-card-actions align="right">
-          <q-btn label="Cancel" color="grey" v-close-popup />
+          <q-btn class="text-black" label="Cancel" style="color: #075070;" v-close-popup />
           <q-btn label="Logout" color="red" @click="handleLogout" />
         </q-card-actions>
       </q-card>
