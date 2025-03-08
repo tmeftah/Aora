@@ -100,9 +100,8 @@ async function submitLoginForm() {
             <div class="q-mt-sm">
               <div class="q-mt-sm">
                 <span> Don't have an account yet? </span>
-                <router-link class="text-primary" to="/register">
-                  Register
-                </router-link>
+                <q-btn class="text-white" size="sm" label="Register" to="/register" unelevated rounded
+                  style="background-color:#075070" />
               </div>
             </div>
           </q-card-section>
