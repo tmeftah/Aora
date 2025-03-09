@@ -1,3 +1,5 @@
+# THIS IS DEPRICATED SCRIPT, WHICH IS NO LONGER USED
+# PLEASE USE create_embeddings.py FILE
 import hashlib
 import json
 import os
@@ -95,7 +97,6 @@ def process_document(pdf_path, topic):
             embeddings=[embedding],
             metadatas=[{"document_id": pdf_path, "topic": topic}]),
 
-
     # Update cache with new document hash
     document_cache[pdf_path] = doc_hash
     save_json(CACHE_FILE, document_cache)
@@ -128,6 +129,9 @@ def remove_deleted_files():
 def monitor_folder():
     """Continuously monitor the document folder for changes."""
     while True:
+        print("\n🔍 THIS IS A OLD SCRIPT, DO NOT RUN. \
+                PLEASE USE create_embeddings.py FILE \
+              TO CREATE YOUR EMBEDDINGS")
         print("\n🔍 Checking for new, updated, or deleted documents...")
 
         for file_name in os.listdir(DOCUMENTS_FOLDER):
@@ -135,7 +139,8 @@ def monitor_folder():
                 file_path = os.path.join(DOCUMENTS_FOLDER, file_name)
                 # Ask user to set topic
                 topic = input(f"📌 Enter topic for {file_name}: ")
-                process_document(file_path, topic)
+                # process_document(file_path, topic)
+                pass
 
         print("✅ Vectorization complete. Checking again in 60 seconds...")
         time.sleep(60)
