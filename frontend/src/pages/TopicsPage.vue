@@ -139,9 +139,11 @@ const confirmDeletionText = computed(() => {
 
     <template v-slot:DialogBox>
       <q-dialog v-model="showDialog">
-        <q-card style="min-width: 500px">
-          <q-card-section class="bg-primary text-white text-center">
-            <div class="text-h5"> Add New Topic</div>
+        <q-card style="width: 700px; max-width: 80vw;">
+          <q-card-section class="row text-white" style="background-color:#075070">
+            <div class="text-h5 text-bold"> Add New Topic</div>
+            <q-space />
+            <q-btn icon="close" flat round dense v-close-popup />
           </q-card-section>
 
           <q-card-section>
@@ -152,8 +154,8 @@ const confirmDeletionText = computed(() => {
           </q-card-section>
 
           <q-card-actions align="right">
-            <q-btn label="Cancel" color="negative" @click="showDialog = false" />
-            <q-btn label="Add Topic" color="primary" @click="saveTopic" />
+            <q-btn label="Cancel" @click="showDialog = false" style="color: #075070;" />
+            <q-btn label=" Add Topic" color="green" @click="saveTopic" />
           </q-card-actions>
         </q-card>
       </q-dialog>
