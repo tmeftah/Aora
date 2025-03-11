@@ -2,6 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useMainStore } from "../stores/mainStore";
 import { useTopicStore } from '../stores/topicsStore';
+import { showNotification } from "src/stores/auth";
 import { ref, onMounted, computed, watch } from "vue";
 import "../assets/css/base.css"
 
@@ -44,7 +45,15 @@ async function getLLMResponse(question, model_name) {
     loading.value = false;
   }
 }
-const greenModel = ref("Not Vectorized")
+
+const limitSelection = (newSelection) => {
+  if (newSelection.length > 2) {
+    showNotification('negative', 'Please dont select more than 2 topics', 'done')
+    selectedTopics.value = newSelection.slice(0, 2);
+    return;
+  }
+  selectedTopics.value = newSelection;
+};
 </script>
 
 
@@ -53,7 +62,7 @@ const greenModel = ref("Not Vectorized")
   <q-page class="full-page">
     <q-card flat bordered class="full-card">
       <q-card-section class="text-black">
-        <div class="text-h4 text-bold">🔮Aora-AI </div>
+        <div class="text-h4 text-bold" style="color:#075070">🔮Aora-AI </div>
       </q-card-section>
 
       <q-card-section class="toolbar">
@@ -75,12 +84,13 @@ const greenModel = ref("Not Vectorized")
           v-model="greenModel" /> -->
 
         <q-select style="min-width: 250px; max-width: 300px" dense options-dense outlined v-model="selectedTopics"
-          multiple :options="allTopics" use-chips stack-label label="Select Topics" required />
+          multiple :options="allTopics" use-chips stack-label label="Select Topics" required
+          @update:model-value="limitSelection" clearable />
+
 
 
         <q-select style="min-width: 250px; max-width: 300px" dense options-dense outlined v-model="model_name"
           :options="models" label="Model" class="model-select"
-
           @update:model-value="(val) => MainStore.set_model_name(val)">
           <template v-slot:append v-if="models.length === 0">
             <q-icon name="warning" color="red">
@@ -108,4 +118,3 @@ const greenModel = ref("Not Vectorized")
   </q-page>
 
 </template>
-

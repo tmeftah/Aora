@@ -1,11 +1,13 @@
 import json
-import requests
 import os
-import chromadb
-from sentence_transformers import SentenceTransformer
-from backend.exceptions import ModelsNotRetrievedException
 from typing import List
 
+import chromadb
+import requests
+from sentence_transformers import SentenceTransformer
+
+from backend.exceptions import ModelsNotRetrievedException
+from typing import List
 
 
 # === CONFIGURATION ===
@@ -23,10 +25,14 @@ def retrieve_relevant_chunks(query: str, topics: List[str]):
     results = collection.query(
         query_embeddings=[query_embedding],
         n_results=3,
-        where={"topic": {"$in": topics}}  # Filter by selected topics
+        where={"topic": {"$in": topics}},  # Filter by selected topics
     )
 
-    return results["documents"][0] if "documents" in results and results["documents"] else []
+    return (
+        results["documents"][0]
+        if "documents" in results and results["documents"]
+        else []
+    )
 
 
 async def query_service(query: str, model_name: str, topics: List[str]):
@@ -56,11 +62,17 @@ async def query_service(query: str, model_name: str, topics: List[str]):
 
         context = "\n".join(relevant_chunks)
 
-
         data = {
             "messages": [
-                {"role": "system", "content": "You are a helpful assistant. Answer the question using the provided context."},
-                {"role": "user", "content": f"Context: {context}\n\nQuestion: {query}"}],
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant. Answer the question using the provided context.",
+                },
+                {
+                    "role": "user",
+                    "content": f"Context: {context}\n\nQuestion: {query}",
+                },
+            ],
             "model": model_name,
             "temperature": 1,
             "max_completion_tokens": 1024,
@@ -94,7 +106,6 @@ async def model_list() -> list:
 
     try:
 
-
         api_key = os.getenv("LLM_API_KEY")
 
         if not api_key:
@@ -115,7 +126,8 @@ async def model_list() -> list:
             model_names = [model["id"] for model in data.get("data", [])]
             return model_names
         else:
-            print(f"Failed to fetch models: {response.status_code}, {response.text}")
+            print(
+                f"Failed to fetch models: {response.status_code}, {response.text}")
             return []
 
     except Exception as e:

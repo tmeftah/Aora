@@ -12,8 +12,8 @@ defineOptions({
   <q-page class="full-page flex flex-center">
     <q-card flat bordered class="full-card q-pa-lg text-center">
       <q-card-section>
-        <h1 class="text-h3 text-weight-bold text-primary">Coming Soon</h1>
-        <p class="text-h6 q-mt-md text-grey-7">
+        <h1 class="text-h3 text-weight-bold" style="color:#075070">Coming Soon</h1>
+        <p class=" text-h6 q-mt-md text-grey-7">
           This feature is under development. Stay tuned!
         </p>
       </q-card-section>

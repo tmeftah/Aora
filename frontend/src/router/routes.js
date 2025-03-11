@@ -18,6 +18,10 @@ const routes = [
         component: () => import("pages/ProfilePage.vue"),
       },
       {
+        path: "admin",
+        component: () => import("pages/comingSoonPage.vue"),
+      },
+      {
         path: "settings",
         component: () => import("pages/comingSoonPage.vue"),
       },

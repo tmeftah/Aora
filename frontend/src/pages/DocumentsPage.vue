@@ -42,17 +42,25 @@ const columns = [
     sortable: true,
   },
   {
-    name: "status",
-    align: "center",
-    label: "Status",
-    field: "status",
-    sortable: true,
-  },
-  {
     name: "topic_id",
     align: "center",
     label: "Topic ID",
     field: "topic_id",
+    sortable: true,
+  },
+  {
+    name: "status",
+    align: "center",
+    label: "Status",
+    field: (row) => (row.vectorized ? "Vectorized" : "On Progress"),
+    sortable: true,
+  },
+  {
+    name: "vectorized",
+    align: "center",
+    label: "vectorized",
+    field: "vectorized",
+    format: (val) => (val ? "☑️" : "❌"),
     sortable: true,
   },
   {

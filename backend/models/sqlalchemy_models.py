@@ -1,10 +1,12 @@
+import datetime
 
 from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
 from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey
-import datetime
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy import Boolean
+
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -18,6 +20,16 @@ class User(Base):
     password_hash = Column(String)
     # 1 = user, 4 = manager, 5 = admin, 6 = superadmin
     role = Column(Integer, default=1)
+    # group_id = Column(Integer, ForeignKey("group.id"), nullable=False)
+    is_admin = Column(Boolean, default=False)
+
+
+# class Group(Base):
+#     __tablename__ = "group"
+#     id = Column(Integer, primary_key=True)
+#     name = Column(String, unique=True)
+#     topic_id = Column(Integer, ForeignKey("topics.id"), nullable=False)
+#     topic = relationship("Topic", back_populates="group")
 
 
 class Documents(Base):
@@ -37,6 +49,7 @@ class Documents(Base):
     created_at = Column(DateTime, default=datetime.datetime.now)
     updated_at = Column(DateTime, default=datetime.datetime.now)
     topic_id = Column(Integer, ForeignKey("topics.id"), nullable=False)
+    vectorized = Column(Boolean, default=False)
 
     topic = relationship("Topic", back_populates="documents")
 
@@ -46,5 +59,4 @@ class Topic(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
 
-    documents = relationship(
-        "Documents", back_populates="topic")
+    documents = relationship("Documents", back_populates="topic")

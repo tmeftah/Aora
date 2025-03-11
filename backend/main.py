@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
@@ -9,13 +10,11 @@ from backend.api.document import document_router
 from backend.api.health import health_router
 from backend.api.query import query_router
 from backend.api.token import token_router
-from backend.api.user import user_router
 from backend.api.topics import topic_router
+from backend.api.user import user_router
 from backend.db.sessions import create_tables
 from backend.db.sessions import get_db
 from backend.db.utils import populate_admin_user
-
-from dotenv import load_dotenv
 
 load_dotenv()
 
